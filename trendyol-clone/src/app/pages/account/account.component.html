@@ -1,0 +1,41 @@
+<!-- src/app/pages/account/account.component.html -->
+<div class="account-container">
+  <h2>My Account</h2>
+
+  <div class="info">
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p><strong>Roles:</strong> {{ roles.join(', ') }}</p>
+  </div>
+
+  <div class="panel-action" *ngIf="hasAdmin() || hasSeller()">
+    <button (click)="gotoPanel()">
+      Go to {{ hasAdmin() ? 'Admin' : 'Seller' }} Panel
+    </button>
+  </div>
+
+  <hr />
+
+  <div class="orders-section">
+    <h3>My Orders</h3>
+    <ul *ngIf="orders.length; else noOrders">
+      <li *ngFor="let o of orders">
+        {{ o.productNames.join(', ') }} — {{ o.totalPrice | currency:'USD':'symbol' }}
+      </li>
+    </ul>
+    <ng-template #noOrders>
+      <p class="no-orders">You have no orders yet.</p>
+    </ng-template>
+  </div>
+
+  <div class="cart-action">
+    <button class="place-order" (click)="createOrderFromCart()">
+      Place Order from Cart
+    </button>
+  </div>
+
+  <div class="logout-action">
+    <button class="logout" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</div>

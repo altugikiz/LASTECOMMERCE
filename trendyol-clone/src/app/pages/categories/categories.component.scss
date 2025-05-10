@@ -1,0 +1,82 @@
+.categories-container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
+
+  .category-card {
+    background: #1f2128;
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    max-width: 150px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #ccc;
+      transition: color 0.2s ease;
+    }
+
+    span {
+      font-size: 0.9rem;
+      color: #eee;
+      font-weight: 500;
+    }
+
+    &:hover {
+      background: #2a2d36;
+      transform: translateY(-4px);
+
+      i {
+        color: #ff6f61;
+      }
+
+      span {
+        color: #fff;
+      }
+    }
+  }
+
+  /* Mobilde biraz daha sıkışık gösterim için */
+  @media (max-width: 480px) {
+    .grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+    }
+
+    .category-card {
+      padding: 16px;
+
+      i {
+        font-size: 1.8rem;
+      }
+
+      span {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

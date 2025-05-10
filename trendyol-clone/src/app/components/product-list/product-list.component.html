@@ -1,0 +1,109 @@
+<!-- src/app/pages/product-list/product-list.component.html -->
+<div class="search-filter-bar">
+  <!-- Sort Butonu -->
+  <div class="sort-wrapper">
+    <button class="sort-toggle" [class.open]="sortPanelOpen" (click)="toggleSortPanel()">
+      <i class="fas fa-filter"></i> Sort <i class="fas fa-chevron-down arrow-icon"></i>
+    </button>
+    <div *ngIf="sortPanelOpen" class="sort-panel" @dropdownFadeSlide>
+      <select [(ngModel)]="selectedSort" (change)="applyFilters()">
+        <option value="">Default</option>
+        <option value="priceAsc">Fiyata Göre ↑</option>
+        <option value="priceDesc">Fiyata Göre ↓</option>
+        <option value="ratingDesc">Puan’a Göre ↓</option>
+        <option value="nameAsc">İsme Göre A→Z</option>
+      </select>
+      <button class="clear-sort-btn" (click)="clearSort()">
+        <i class="fas fa-times-circle"></i> Clear Sort
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Butonu -->
+  <div class="advanced-filter">
+    <button class="filter-toggle" [class.open]="showFilters" (click)="toggleFilterPanel()">
+      <i class="fas fa-sliders-h"></i> Filters <i class="fas fa-chevron-down arrow-icon"></i>
+    </button>
+    <div *ngIf="showFilters" class="filter-panel" @dropdownFadeSlide>
+      <input
+        type="number"
+        placeholder="Min Price"
+        [(ngModel)]="minPrice"
+        (input)="validateMinPrice(); applyFilters()"
+        [class.input-error]="minPriceInvalid"
+      />
+      <div *ngIf="minPriceInvalid" class="error-message">Valid min price giriniz.</div>
+
+      <input
+        type="number"
+        placeholder="Max Price"
+        [(ngModel)]="maxPrice"
+        (input)="validateMaxPrice(); applyFilters()"
+        [class.input-error]="maxPriceInvalid"
+      />
+      <div *ngIf="maxPriceInvalid" class="error-message">Valid max price giriniz.</div>
+
+      <input
+        type="text"
+        placeholder="Brand"
+        [(ngModel)]="brandFilter"
+        (input)="applyFilters()"
+      />
+
+      <select [(ngModel)]="genderFilter" (change)="applyFilters()">
+        <option value="">All Genders</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Unisex">Unisex</option>
+      </select>
+
+      <button class="clear-filters-btn" (click)="clearAllFilters()">
+        <i class="fas fa-times-circle"></i> Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Arama Çubuğu -->
+  <div class="search-input">
+    <input
+      type="text"
+      placeholder="Search for products..."
+      (input)="searchProducts($any($event.target).value)"
+    />
+    <i class="fas fa-search search-icon"></i>
+  </div>
+</div>
+
+<!-- Kategori Çipleri -->
+<div class="category-chips">
+  <span
+    *ngFor="let cat of categories"
+    class="chip"
+    [class.active]="selectedCategory === cat"
+    (click)="filterByCategory(cat)"
+  >
+    {{ cat }}
+  </span>
+  <span
+    *ngIf="selectedCategory"
+    class="chip clear"
+    (click)="filterByCategory('')"
+  >
+    Clear
+  </span>
+</div>
+
+<!-- Ürünler -->
+<div *ngIf="filteredProducts.length; else noResults" class="product-list">
+  <app-product-card
+    *ngFor="let p of filteredProducts"
+    [product]="p">
+  </app-product-card>
+</div>
+
+<ng-template #noResults>
+  <div class="no-results">
+    <i class="fas fa-box-open"></i>
+    <p>No products found.</p>
+  </div>
+</ng-template>

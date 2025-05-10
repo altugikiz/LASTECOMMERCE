@@ -1,0 +1,189 @@
+/* src/app/pages/account/account.component.scss */
+
+.account-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+  
+  h2 {
+    font-size: 30px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    position: relative;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #5c6bc0;
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+  }
+
+  .info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      color: #555;
+      strong {
+        color: #34495e;
+      }
+    }
+  }
+
+  .panel-action {
+    margin-bottom: 30px;
+    width: 100%;
+    text-align: center;
+
+    button {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+      box-shadow: 0 6px 12px rgba(41, 128, 185, 0.3);
+
+      &:hover {
+        background: linear-gradient(135deg, #2980b9, #2471a3);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .orders-section {
+    width: 100%;
+    margin-bottom: 30px;
+
+    h3 {
+      color: #5c6bc0;
+      font-size: 22px;
+      border-left: 4px solid #5c6bc0;
+      padding-left: 10px;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        background-color: #2196f3; // Canlı mavi (Material Blue 500)
+        color: #ffffff; // Beyaz yazı rengi
+        border-radius: 14px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        margin-bottom: 12px;
+        padding: 18px 25px;
+        font-size: 15px;
+        transition: all 0.2s ease;
+
+      /* 
+        background-color: #f4f4f4;
+        border-radius: 14px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+        margin-bottom: 12px;
+        padding: 18px 25px;
+        font-size: 15px;
+        transition: all 0.2s ease;
+ */
+        &:hover {
+
+          background-color: #1976d2; // Hover'da biraz daha koyu mavi (Material Blue 700)
+          transform: translateY(-4px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+          /* transform: translateY(-4px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); */
+        }
+      }
+
+      .no-orders {
+        margin-top: 20px;
+        color: #999;
+        font-size: 16px;
+        font-style: italic;
+        text-align: center;
+      }
+    }
+  }
+
+  .cart-action {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+
+    .place-order {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 6px 12px rgba(24, 90, 157, 0.3);
+
+      i {
+        font-size: 18px;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, #185a9d, #43cea2);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .logout-action {
+    width: 100%;
+    text-align: center;
+
+    button.logout {
+      background: transparent;
+      color: #c0392b;
+      border: 2px solid #c0392b;
+      padding: 10px 26px;
+      border-radius: 30px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        background: #c0392b;
+        color: #fff;
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .account-container {
+    padding: 20px;
+
+    h2 { font-size: 26px; }
+
+    .orders-section h3 { font-size: 20px; }
+  }
+}

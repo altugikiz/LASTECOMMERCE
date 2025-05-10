@@ -1,0 +1,40 @@
+<div class="dashboard">
+    <header class="dashboard__header">
+      <h2>Welcome, {{ sellerName }}!</h2>
+    </header>
+  
+    <section class="dashboard__stats">
+      <div class="stat-card">
+        <div class="stat-card__icon">📦</div>
+        <div class="stat-card__body">
+          <p class="stat-card__value">{{ stats.totalProducts }}</p>
+          <p class="stat-card__label">Total Products</p>
+        </div>
+      </div>
+  
+      <div class="stat-card">
+        <div class="stat-card__icon">🛒</div>
+        <div class="stat-card__body">
+          <p class="stat-card__value">{{ stats.pendingOrders }}</p>
+          <p class="stat-card__label">Pending Orders</p>
+        </div>
+      </div>
+  
+      <div class="stat-card">
+        <div class="stat-card__icon">💰</div>
+        <div class="stat-card__body">
+          <p class="stat-card__value">{{ stats.monthlyRevenue | currency }}</p>
+          <p class="stat-card__label">Sales This Month</p>
+        </div>
+      </div>
+    </section>
+  
+    <footer class="dashboard__actions">
+      <button routerLink="/seller/products/new" class="btn btn--primary">
+        + Add New Product
+      </button>
+      <button routerLink="/seller/orders" class="btn btn--secondary">
+        View All Orders
+      </button>
+    </footer>
+  </div>

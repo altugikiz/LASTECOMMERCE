@@ -1,0 +1,88 @@
+<!--     <div class="product-add-container">
+        <h2>Add Product</h2>
+        <form (ngSubmit)="addProduct()">
+        <input type="text" placeholder="Product Name" [(ngModel)]="name" name="name" required>
+        <input type="text" placeholder="Description" [(ngModel)]="description" name="description" required>
+        <input type="number" placeholder="Price" [(ngModel)]="price" name="price" required>
+        <input type="text" placeholder="Category" [(ngModel)]="category" name="category" required>
+    
+        <input type="file" (change)="onFileSelected($event)" required>
+    
+        <button type="submit">Add Product</button>
+    
+        <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+        </form>
+    </div>
+     -->
+
+
+     <div class="product-add-container">
+        <h2>Add Product</h2>
+        <form (ngSubmit)="addProduct()" #productForm="ngForm">
+          <input
+            type="text"
+            placeholder="Product Name"
+            [(ngModel)]="name"
+            name="name"
+            required
+            #nameCtrl="ngModel"
+          />
+          <div *ngIf="nameCtrl.invalid && nameCtrl.touched" class="error">
+            Name is required
+          </div>
+      
+          <textarea
+            placeholder="Description"
+            [(ngModel)]="description"
+            name="description"
+            required
+            #descCtrl="ngModel"
+          ></textarea>
+          <div *ngIf="descCtrl.invalid && descCtrl.touched" class="error">
+            Description is required
+          </div>
+      
+          <input
+            type="number"
+            placeholder="Price"
+            [(ngModel)]="price"
+            name="price"
+            required
+            #priceCtrl="ngModel"
+          />
+          <div *ngIf="priceCtrl.invalid && priceCtrl.touched" class="error">
+            Price is required and must be a number
+          </div>
+      
+          <input
+            type="text"
+            placeholder="Category"
+            [(ngModel)]="category"
+            name="category"
+            required
+            #catCtrl="ngModel"
+          />
+          <div *ngIf="catCtrl.invalid && catCtrl.touched" class="error">
+            Category is required
+          </div>
+      
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            required
+            #fileCtrl="ngModel"
+            name="file"
+            ngModel
+          />
+          <div *ngIf="!selectedFile && fileCtrl.touched" class="error">
+            Image is required
+          </div>
+      
+          <button type="submit" [disabled]="productForm.invalid">
+            Add Product
+          </button>
+      
+          <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+        </form>
+      </div>
+       

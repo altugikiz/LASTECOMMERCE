@@ -1,0 +1,42 @@
+<h2>asd</h2>
+
+<div class="product-details" *ngIf="product">
+    <img [src]="product.imageUrl" [alt]="product.name">
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.description }}</p>
+    <h3>{{ product.price | currency:'TRY' }}</h3>
+  
+    <!-- Sepete Ekle Butonu -->
+    <button (click)="addToCart()" class="add-to-cart-btn">Add to Cart</button>
+  
+    <!-- Yorumlar -->
+    <h4>Comments:</h4>
+    <div *ngIf="product.comments && product.comments.length > 0; else noComments">
+      <p *ngFor="let comment of product.comments">{{ comment }}</p>
+    </div>
+    <ng-template #noComments>
+      <p>No comments yet.</p>
+    </ng-template>
+  
+    <!-- Ortalama Puan -->
+    <h4>Average Rating:</h4>
+    <p *ngIf="getAverageRating() !== null">
+      {{ getAverageRating() | number:'1.1-1' }} / 5
+    </p>
+    <p *ngIf="getAverageRating() === null">No ratings yet</p>
+  
+    <!-- Yorum Ekle -->
+    <h4>Add a Comment:</h4>
+    <form (ngSubmit)="addComment()">
+      <textarea [(ngModel)]="comment" name="comment" required placeholder="Write your comment..."></textarea>
+      <br>
+      <label>Rating:</label>
+      <select [(ngModel)]="rating" name="rating" required>
+        <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}</option>
+      </select>
+      <br><br>
+      <button type="submit">Submit</button>
+      <div *ngIf="successMessage">{{ successMessage }}</div>
+    </form>
+  </div>
+  

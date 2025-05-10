@@ -1,0 +1,142 @@
+.seller-requests-container {
+  padding: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    color: #34495e;
+    font-style: italic;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    margin-bottom: 20px;
+
+    p {
+      margin: 0; // p etiketinin varsayılan margin'ini sıfırla
+      font-weight: 500; // Daha belirgin bir font ağırlığı
+    }
+  }
+
+  .error-message {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #e74c3c;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+  }
+
+  .no-requests {
+    text-align: center;
+    padding: 25px;
+    font-size: 18px; // Yazı boyutunu artırdım
+    color: #2c3e50; // Daha koyu ve okunabilir bir renk
+    font-style: normal; // Italic yerine normal font
+    font-weight: 500; // Daha belirgin bir ağırlık
+    background-color: #dfe6e9; // Hafif farklı bir arka plan rengi
+    border-radius: 8px;
+    border: 1px solid #b2bec3; // Hafif bir kenarlık
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); // Hafif gölge
+    margin-top: 20px;
+
+    p {
+      margin: 0; // p etiketinin varsayılan margin'ini sıfırla
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: linear-gradient(145deg, #ffffff, #f1f3f5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid #e0e4e8;
+    }
+
+    th {
+      background: linear-gradient(145deg, #dfe6e9, #b2bec3);
+      font-weight: 600;
+      color: #2d3436;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      color: #2c3e50;
+      font-size: 15px;
+    }
+
+    tr:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:hover {
+      background-color: #e9ecef;
+      transition: background-color 0.3s ease;
+    }
+
+    button {
+      padding: 8px 14px;
+      margin-right: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+      &.approve-btn {
+        background-color: #00b894;
+        color: white;
+
+        &:hover {
+          background-color: #009875;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+      }
+
+      &.reject-btn {
+        background-color: #d63031;
+        color: white;
+
+        &:hover {
+          background-color: #c0392b;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+  }
+}

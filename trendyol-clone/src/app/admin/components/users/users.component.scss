@@ -1,0 +1,114 @@
+// src/app/admin/components/users/users.component.scss
+
+:host {
+    display: block;
+  }
+  
+  mat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    margin: 1rem 0;
+    overflow: hidden;
+  
+    mat-card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e0e0e0;
+      color: #333333;
+    }
+  
+    mat-card-content {
+      padding: 1.5rem;
+  
+      mat-progress-spinner {
+        display: block;
+        margin: 2rem auto;
+      }
+  
+      .user-list-wrapper {
+        margin-top: 1rem;
+  
+        mat-list-item {
+          background: #fafafa;
+          border-radius: 8px;
+          margin-bottom: 0.75rem;
+          padding: 0.75rem 1rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          transition: background 0.2s;
+  
+          &:hover {
+            background: #f0f4ff;
+          }
+  
+          .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+  
+            mat-icon {
+              font-size: 1.4rem;
+              color: #2563eb;
+            }
+  
+            .email {
+              font-weight: 500;
+              color: #222222;
+            }
+  
+            .roles {
+              font-size: 0.9rem;
+              color: #555555;
+            }
+  
+            .banned {
+              font-size: 0.85rem;
+              color: #d32f2f;
+              font-weight: 600;
+            }
+          }
+  
+          .actions {
+            button {
+              font-size: 0.9rem;
+              border-radius: 6px;
+              padding: 0.4rem 0.8rem;
+              transition: background 0.2s;
+  
+              &.mat-warn {
+                background: #dc2626;
+                color: #fff;
+                &:hover {
+                  background: #b91c1c;
+                }
+              }
+  
+              &.mat-primary {
+                background: #2563eb;
+                color: #fff;
+                &:hover {
+                  background: #1e40af;
+                }
+              }
+            }
+          }
+        }
+  
+        .no-users {
+          text-align: center;
+          color: #777777;
+          margin-top: 1rem;
+          font-style: italic;
+        }
+      }
+  
+      .error {
+        color: #d32f2f;
+        padding: 1rem;
+      }
+    }
+  }
+  

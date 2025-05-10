@@ -1,0 +1,18 @@
+<div class="order-history">
+    <h2>Order History</h2>
+  
+    <div *ngIf="orders.length > 0; else noOrders" class="orders-grid">
+      <div *ngFor="let order of orders" class="order-card">
+        <h4><i class="fas fa-receipt"></i> Order #{{ order.id }}</h4>
+        <p><strong><i class="fas fa-user"></i> Email:</strong> {{ order.userEmail }}</p>
+        <p><strong><i class="fas fa-box-open"></i> Products:</strong> {{ order.productNames?.join(', ') }}</p>
+        <p><strong><i class="fas fa-money-bill-wave"></i> Total:</strong> {{ order.totalPrice | currency:'USD':'symbol' }}</p>
+      </div>
+    </div>
+  
+    <ng-template #noOrders>
+      <p class="no-orders-text">
+        <i class="fas fa-info-circle"></i> No orders yet.
+      </p>
+    </ng-template>
+</div>

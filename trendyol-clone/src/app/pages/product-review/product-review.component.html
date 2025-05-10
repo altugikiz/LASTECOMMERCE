@@ -1,0 +1,45 @@
+<div *ngIf="product" class="review-page">
+  <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+  
+  <h2>{{ product.name }}</h2>
+  <p class="price">{{ product.price | currency:'USD' }}</p>
+
+  <!-- Existing Reviews -->
+  <div class="existing-reviews" *ngIf="product.reviews && product.reviews.length > 0">
+    <h4>Previous Reviews</h4>
+    <div class="reviews-scroll">
+      <div *ngFor="let rev of product.reviews" class="review-card">
+        <div class="review-header">
+          <span class="review-user">{{ rev.userName }}</span>
+          <span class="review-rating">{{ rev.rating }} ★</span>
+        </div>
+        <p class="review-comment">{{ rev.comment }}</p>
+        <small class="review-date">{{ rev.createdAt | date:'short' }}</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit New Review -->
+  <h4>Leave a Rating & Comment</h4>
+  <div class="review-form">
+    <label for="rating">Rating (1-5):</label>
+    <input
+      id="rating"
+      type="number"
+      [(ngModel)]="newRating"
+      name="rating"
+      min="1"
+      max="5"
+    />
+
+    <label for="comment">Comment:</label>
+    <textarea
+      id="comment"
+      [(ngModel)]="newComment"
+      name="comment"
+      placeholder="Write your comment..."
+    ></textarea>
+
+    <button (click)="submitFeedback()" class="submit-btn">Submit</button>
+  </div>
+</div>

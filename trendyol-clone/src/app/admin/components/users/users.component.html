@@ -1,0 +1,33 @@
+<mat-card>
+  <mat-card-title>Users</mat-card-title>
+  <mat-card-content>
+    <mat-progress-spinner *ngIf="isLoading" mode="indeterminate"></mat-progress-spinner>
+
+    <div *ngIf="!isLoading" class="user-list-wrapper">
+      <mat-list>
+        <mat-list-item *ngFor="let u of users">
+          <div class="user-info">
+            <mat-icon>person</mat-icon>
+            <span class="email">{{ u.email }}</span>
+            <span class="roles">{{ u.roles.join(', ') }}</span>
+            <span class="banned" *ngIf="u.isBanned">🔒 Banned</span>
+          </div>
+          <div class="actions">
+            <button mat-button color="warn" *ngIf="!u.isBanned" (click)="banUser(u.id)">
+              Ban
+            </button>
+            <button mat-button color="primary" *ngIf="u.isBanned" (click)="unbanUser(u.id)">
+              Unban
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+
+      <div *ngIf="!users.length" class="no-users">
+        No users found.
+      </div>
+    </div>
+
+    <div *ngIf="error" class="error">{{ error }}</div>
+  </mat-card-content>
+</mat-card>

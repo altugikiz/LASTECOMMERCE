@@ -1,0 +1,178 @@
+.register-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 40px;
+  background: rgba(18, 18, 30, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: fadeSlideIn 0.6s ease-out;
+ 
+  h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #e0e0ff;
+    font-weight: 600;
+  }
+ 
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    position: relative;
+ 
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 20px 12px 40px;
+      font-size: 16px;
+      border: 1px solid #5c6bc0;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      transition: all 0.3s ease;
+ 
+      &::placeholder {
+        color: #b2b2d0;
+      }
+ 
+      &:focus {
+        outline: none;
+        border-color: #7e8ceb;
+        box-shadow: 0 0 10px rgba(92, 107, 192, 0.8);
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+ 
+    i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-20%);
+      color: #aaa;
+      font-size: 16px;
+    }
+  }
+ 
+  /** ✔ Bu artık form-group dışında olsa bile etkili */
+  .seller-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-size: 15px;
+    color: #ccc;
+    user-select: none;
+    justify-content: flex-start;
+ 
+    input[type="checkbox"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #7e8ceb;
+      border-radius: 5px;
+      background-color: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+ 
+      &:hover {
+        box-shadow: 0 0 6px rgba(126, 140, 235, 0.6);
+        transform: scale(1.1);
+      }
+ 
+      &:active {
+        transform: scale(0.95);
+      }
+ 
+      &:checked {
+        background-color: #7e8ceb;
+        border-color: #7e8ceb;
+      }
+ 
+      &:checked::after {
+        content: '✔';
+        color: #111;
+        font-size: 12px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        font-weight: bold;
+      }
+    }
+ 
+    label {
+      cursor: pointer;
+      font-weight: 500;
+      transform: translateY(20%);
+    }
+  }
+ 
+  .register-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    color: #fff;
+    background: linear-gradient(to right, #7e57c2, #5c6bc0);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+ 
+    &:hover:not(:disabled) {
+      background: linear-gradient(to right, #9575cd, #3f51b5);
+      transform: scale(1.03);
+    }
+ 
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+ 
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+ 
+  .error {
+    margin-top: 15px;
+    color: #ef5350;
+    font-weight: 500;
+  }
+ 
+  .success {
+    margin-top: 15px;
+    color: #66bb6a;
+    font-weight: 500;
+  }
+ 
+  .link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+ 
+    a {
+      color: #7c4dff;
+      font-weight: 600;
+      text-decoration: none;
+ 
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+ 
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

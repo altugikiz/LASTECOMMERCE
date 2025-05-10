@@ -1,0 +1,25 @@
+<!-- <h2>Explore Categories</h2>
+<div class="categories-grid">
+  <div
+    *ngFor="let cat of categories"
+    class="category-card"
+    (click)="goToCategory(cat)"
+  >
+    <i [class]="cat.icon"></i>
+    <span>{{ cat.categoryName }}</span>
+  </div>
+</div>
+ -->
+ <div class="categories-container">
+  <h2>Explore Categories</h2>
+  <div class="grid">
+    <div 
+      class="category-card" 
+      *ngFor="let cat of categories" 
+      (click)="goToCategory(cat.name)"
+    >
+      <i [class]="cat.icon"></i>
+      <span>{{ cat.name }}</span>
+    </div>
+  </div>
+</div>

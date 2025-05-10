@@ -1,0 +1,43 @@
+<!-- src/app/seller/components/layout/layout.component.html 
+<mat-sidenav-container class="h-full">
+    <mat-sidenav mode="side" opened class="w-64 bg-white">
+      <mat-nav-list>
+        <a mat-list-item routerLink="dashboard" routerLinkActive="active">
+          Dashboard
+        </a>
+        <a mat-list-item routerLink="products" routerLinkActive="active">
+          My Products
+        </a>
+        <a mat-list-item routerLink="orders" routerLinkActive="active">
+          My Orders
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="p-4">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+   -->
+
+   <!-- src/app/seller/components/seller-layout/seller-layout.component.html -->
+   <div class="seller-layout">
+    <nav class="sidebar">
+      <div class="sidebar__brand">
+        <i class="fas fa-store sidebar__icon"></i> <!-- Logo yerine ikon -->
+        <h1 class="sidebar__title">Seller Panel</h1>
+      </div>
+      <ul class="sidebar__menu">
+        <li routerLinkActive="active"><a routerLink="/seller/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li routerLinkActive="active"><a routerLink="/seller/products"><i class="fas fa-box"></i> Products</a></li>
+        <li routerLinkActive="active"><a routerLink="/seller/orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li routerLinkActive="active"><a routerLink="/seller/settings"><i class="fas fa-cog"></i> Settings</a></li>
+      </ul>
+      <div class="sidebar__footer">
+        <button (click)="logout()" class="btn-logout"><i class="icon-logout"></i> Logout</button>
+      </div>
+    </nav>
+  
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>

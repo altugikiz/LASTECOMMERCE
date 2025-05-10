@@ -1,0 +1,212 @@
+.product-card {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333;
+  }
+
+  .price {
+    color: #ff6600;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 20px;
+  }
+
+  .category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #6200ea;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .rating-stars {
+    margin-top: 5px;
+    color: #f39c12;
+    font-size: 16px;
+  }
+
+  .no-rating {
+    margin-top: 5px;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .add-to-cart-button {
+    background: linear-gradient(135deg, #5c6bc0, #7986cb);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 16px;
+    margin-top: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(92, 107, 192, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(63, 81, 181, 0.4);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: skewX(-25deg);
+      animation: shimmer 1.8s infinite;
+    }
+
+    &.added {
+      background: linear-gradient(135deg, #43a047, #66bb6a);
+      animation: bounce 0.4s ease;
+    }
+  }
+
+  // 💖 Favori Butonu
+  .favorite-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    animation: fadeIn 0.4s ease;
+
+    i {
+      color: #ccc;
+      transition: color 0.4s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    &.active i {
+      color: #e91e63;
+      animation: heart-pop 0.4s ease, glow-pulse 1s ease infinite, heart-burst 0.6s ease;
+    }
+
+    &:hover i {
+      transform: scale(1.2);
+    }
+  }
+}
+
+// Animasyonlar
+@keyframes shimmer {
+  0% {
+    left: -75%;
+  }
+  50% {
+    left: 125%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+@keyframes heart-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes glow-pulse {
+  0% {
+    text-shadow: 0 0 4px rgba(233, 30, 99, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(233, 30, 99, 0.8);
+  }
+  100% {
+    text-shadow: 0 0 4px rgba(233, 30, 99, 0.4);
+  }
+}
+
+@keyframes heart-burst {
+  0% {
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 12px 8px rgba(233, 30, 99, 0.2);
+    transform: scale(1.5);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

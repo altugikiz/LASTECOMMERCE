@@ -1,0 +1,99 @@
+.product-details {
+    background-color: #ffffff;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+  
+    h2 {
+      margin-bottom: 10px;
+      font-size: 28px;
+      color: #333;
+    }
+  
+    p {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #666;
+    }
+  
+    h3 {
+      color: #ff6600;
+      margin-bottom: 20px;
+    }
+  
+    .add-to-cart-btn {
+      background-color: #ff6600;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-bottom: 30px;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #e65c00;
+      }
+    }
+  
+    h4 {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+  
+    form {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      
+      textarea {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        resize: vertical;
+        min-height: 80px;
+        margin-bottom: 10px;
+      }
+  
+      select {
+        width: 100px;
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+  
+      button[type="submit"] {
+        background-color: #5c6bc0;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #3f51b5;
+        }
+      }
+  
+      .successMessage {
+        color: green;
+        margin-top: 10px;
+      }
+    }
+  }
+  

@@ -1,0 +1,90 @@
+// src/app/admin/components/layout/layout.component.scss
+
+.admin-layout {
+    display: flex;
+    height: 100vh;
+    background: #eef2f7;
+  
+    // Sol yan menü
+    .sidenav {
+      width: 260px;
+      background: #1f2937; // daha koyu lacivert-gri
+      color: #e5e7eb;      // açık gri
+  
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 0;
+  
+      &__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+  
+        .sidenav__icon {
+          font-size: 3rem;
+          margin-bottom: 0.5rem;
+          color: #10b981; // canlı yeşil
+        }
+  
+        .sidenav__greeting {
+          font-size: 1rem;
+          font-weight: bold;
+          color: #f3f4f6;
+        }
+      }
+  
+      // Angular Material nav-list öğeleri
+      ::ng-deep .mat-nav-list {
+        padding: 0;
+  
+        a.mat-list-item {
+          height: 50px;
+          color: inherit;
+          padding: 0 1.5rem;
+          display: flex;
+          align-items: center;
+          transition: background 0.2s, color 0.2s;
+  
+          mat-icon {
+            font-size: 1.4rem;
+            margin-right: 1.5rem; // ikon–yazı boşluğu artırıldı
+            color: #9ca3af;        // orta ton gri
+          }
+  
+          span {
+            font-size: 1rem;
+            font-weight: 500;
+          }
+  
+          &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+  
+            mat-icon {
+              color: #fff;
+            }
+          }
+  
+          &.active {
+            background: #2563eb; // canlı mavi
+            color: #fff;
+            font-weight: 600;
+  
+            mat-icon {
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  
+    // Sağ ana içerik
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      background: #eef2f7;
+    }
+  }
+  

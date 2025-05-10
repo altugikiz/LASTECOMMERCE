@@ -1,0 +1,39 @@
+<!-- src/app/seller/components/seller-orders/seller-orders.component.html -->
+
+<div class="seller-orders">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      Loading orders…
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="!loading && error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <!-- Orders Table -->
+    <table *ngIf="!loading && !error && orders.length" class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of orders">
+          <td>{{ o.id }}</td>
+          <td>{{ o.orderDate | date:'short' }}</td>
+          <td>{{ o.orderStatus }}</td>
+          <td>{{ o.totalPrice | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- No Orders State -->
+    <div *ngIf="!loading && !error && orders?.length === 0" class="alert alert-info">
+      You have no orders yet.
+    </div>
+  </div>
+  

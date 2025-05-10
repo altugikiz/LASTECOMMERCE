@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: #21262d; // GitHub dark tonu
+  color: #f0f0f0;
+  overflow-x: hidden;
+}
+
+// Ortak kart yapısı
+.card, .auth-container, .cart, .product-details, .order-history, .product-card {
+  background-color: #ffffff;
+  color: #1a1a1a;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+// Butonlar
+button {
+  position: relative;
+  overflow: hidden;
+  font-weight: 500;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #5c6bc0, #3f51b5);
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #3f51b5, #283593);
+  }
+
+  &:active:after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+    transition: 0s;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: scale(0);
+    width: 120%;
+    height: 120%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.4s, opacity 0.8s;
+    pointer-events: none;
+  }
+}
+
+// Form alanları
+input, textarea, select {
+  width: 100%;
+  padding: 10px 15px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  font-size: 15px;
+  color: #333;
+
+  &:focus {
+    border-color: #5c6bc0;
+    box-shadow: 0 0 10px rgba(92, 107, 192, 0.5);
+    outline: none;
+    background-color: #fff;
+  }
+}

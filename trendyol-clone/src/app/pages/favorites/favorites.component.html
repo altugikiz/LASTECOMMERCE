@@ -1,0 +1,6 @@
+<h2 class="favorites-title">Your Favorites</h2>
+<div class="favorites">
+  <div class="product-grid">
+    <app-product-card *ngFor="let product of favorites" [product]="product"></app-product-card>
+  </div>
+</div>

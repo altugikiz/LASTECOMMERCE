@@ -1,0 +1,92 @@
+<!-- src/app/components/navbar/navbar.component.html -->
+
+<nav class="navbar">
+  <div class="left-group">
+    <a
+      routerLink="/"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+
+    <a
+      routerLink="/lists"
+      routerLinkActive="active-link"
+      class="nav-item"
+    >
+      <i class="fas fa-heart"></i>
+      <span>Lists</span>
+    </a>
+
+    <a
+      routerLink="/cart"
+      routerLinkActive="active-link"
+      class="nav-item cart-icon"
+    >
+      <i class="fas fa-shopping-cart"></i>
+      <span>Cart</span>
+      <span
+        *ngIf="cartItemCount > 0"
+        class="cart-badge"
+        [class.bounce]="bounce"
+      >
+        {{ cartItemCount }}
+      </span>
+    </a>
+
+    <!-- Account her zaman görünsün -->
+    <a
+      routerLink="/account"
+      routerLinkActive="active-link"
+      class="nav-item"
+    >
+      <i class="fas fa-user"></i>
+      <span>Account</span>
+    </a>
+
+    <a
+      routerLink="/categories"
+      routerLinkActive="active-link"
+      class="nav-item"
+    >
+      <i class="fas fa-th"></i>
+      <span>Categories</span>
+    </a>
+
+    <!-- Satıcı rolündeyse: Seller Panel -->
+    <a
+      *ngIf="isLoggedIn() && hasSeller()"
+      routerLink="/seller/dashboard"
+      routerLinkActive="active-link"
+      class="nav-item"
+    >
+      <i class="fas fa-store"></i>
+      <span>Seller Panel</span>
+    </a>
+
+    <!-- Admin rolündeyse: Admin Panel -->
+    <a
+      *ngIf="isLoggedIn() && hasAdmin()"
+      routerLink="/admin/dashboard"
+      routerLinkActive="active-link"
+      class="nav-item"
+    >
+      <i class="fas fa-cog"></i>
+      <span>Admin Panel</span>
+    </a>
+  </div>
+
+  <div class="right-group">
+    <!-- Çıkış butonu sadece giriş yapılmışsa -->
+    <button
+      *ngIf="isLoggedIn()"
+      (click)="logout()"
+      class="logout-button"
+    >
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+  </div>
+</nav>

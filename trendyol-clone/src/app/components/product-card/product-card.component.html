@@ -1,0 +1,51 @@
+<div class="product-card" [class.flipped]="isFlipped">
+  <!-- Ön Yüz -->
+  <div class="card-front">
+    <!-- Favori Butonu -->
+    <button class="favorite-btn" (click)="toggleFavorite()" [ngClass]="{ 'active': isFavorite }">
+      <i class="fas fa-heart" *ngIf="isFavorite"></i>
+      <i class="far fa-heart" *ngIf="!isFavorite"></i>
+    </button>
+ 
+    <!-- Kategori Rozeti -->
+    <div class="category-badge">{{ product.category }}</div>
+ 
+    <!-- İçerik -->
+    <div class="content">
+      <img [src]="product.imageUrl" [alt]="product.name" />
+      <h3>{{ product.name }}</h3>
+ 
+      <div *ngIf="getAverageRating(product.ratings) !== null" class="rating-stars">
+        ⭐ {{ getAverageRating(product.ratings) | number: '1.1-1' }}
+      </div>
+      <div *ngIf="getAverageRating(product.ratings) === null" class="no-rating">
+        No ratings yet
+      </div>
+ 
+      <p class="price">{{ product.price | currency: 'USD' }}</p>
+    </div>
+ 
+    <!-- Butonlar -->
+    <div class="buttons">
+      <button class="add-to-cart-button" [ngClass]="{ 'added': addedToCart }" (click)="addToCart()">
+        <i class="fas fa-cart-plus"></i> {{ addedToCart ? 'Added! ✅' : 'Add to Cart' }}
+      </button>
+      <button class="details-button" (click)="flipCard()">🔄 Details</button>
+    </div>
+  </div>
+ 
+  <!-- Arka Yüz -->
+  <div class="card-back">
+    <h4>Description</h4>
+    <div class="description-box">
+      <p class="description" [innerHTML]="descriptionHtml"></p>
+    </div>
+ 
+    <div class="review-buttons">
+      <button class="review-btn" (click)="goToReview()">Go to Review Page</button>
+      <button class="back-btn" (click)="flipCard()">Back</button>
+    </div>
+  </div>
+</div>
+ 
+ 

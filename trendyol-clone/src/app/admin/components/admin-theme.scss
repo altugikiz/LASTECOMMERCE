@@ -1,0 +1,19 @@
+// src/app/admin/components/admin-theme.scss
+$primary: #5c6bc0;
+$accent:  #ff7043;
+$bg-card: #ffffff;
+$txt-main: #333;
+$txt-muted:#777;
+$shadow:  rgba(0,0,0,0.05);
+$radius: 12px;
+
+.card-base {
+  background: $bg-card;
+  border-radius: $radius;
+  box-shadow: 0 4px 16px $shadow;
+  transition: transform 0.2s, box-shadow 0.2s;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+}

@@ -1,0 +1,65 @@
+<!-- src/app/admin/components/layout/layout.component.html -->
+<nav class="admin-layout">
+  <aside class="sidenav">
+    <div class="sidenav__header">
+      <!-- avatar yerine admin ikonu -->
+      <i class="fas fa-user-shield sidenav__icon"></i>
+      <span class="sidenav__greeting">Hello, Admin</span>
+    </div>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        routerLink="dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="products"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-boxes"></i>
+        <span>Products</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="orders"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-receipt"></i>
+        <span>Orders</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="users"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-users"></i>
+        <span>Users</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="seller-requests"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-store"></i>
+        <span>Seller Requests</span>
+      </a>
+    </mat-nav-list>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</nav>
