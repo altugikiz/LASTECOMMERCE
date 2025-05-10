@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     List<User> findAllBySellerRequestedTrueAndSellerApprovedFalse();
+
+    long count(); // Toplam kullanıcı sayısını döndürür
+    long countBySellerApprovedTrue(); // Satıcı olarak onaylanmış kullanıcı sayısını döndürür
+    long countBySellerRequestedTrueAndSellerApprovedFalse();
 }

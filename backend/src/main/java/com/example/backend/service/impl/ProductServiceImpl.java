@@ -41,4 +41,9 @@ public class ProductServiceImpl implements ProductService {
         return repo.findByCategoryId(categoryId);
     }
 
+    @Override
+    public long countAllProducts() {
+        return repo.count();
+    }
+
 }

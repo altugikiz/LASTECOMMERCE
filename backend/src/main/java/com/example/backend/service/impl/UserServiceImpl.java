@@ -43,6 +43,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getPendingSellerRequests() {
         return repo.findAllBySellerRequestedTrueAndSellerApprovedFalse();
-      }
+    }
+
+    // eni eklenen metodlar
+    @Override
+    public long countAllUsers() {
+        return repo.count();
+    }
+
+    @Override
+    public long countSellers() {
+        return repo.countBySellerApprovedTrue();
+    }
+
+    @Override
+    public long countPendingSellerRequests() {
+        return repo.countBySellerRequestedTrueAndSellerApprovedFalse();
+    }
       
 }

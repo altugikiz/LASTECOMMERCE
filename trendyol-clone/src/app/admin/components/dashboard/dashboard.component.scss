@@ -1,85 +1,184 @@
 :host {
-    display: block;
+  display: block;
+  background-color: #ffffff; // Sayfanın dış arka planı beyaz
+  min-height: 100vh;
+}
+
+.dashboard-container {
+  padding: 30px;
+  max-width: 800px; // 2x2 matris için daha kompakt bir genişlik
+  margin: 0 auto;
+  background: #2e2e3e; // Örnekteki koyu ana zemin
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: #e1e1e1; // Örnekteki açık gri metin rengi
+
+  h2 {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #e1e1e1;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
-  
-  mat-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    margin: 1rem 0;
+
+  .loading-spinner {
+    text-align: center;
+    padding: 25px;
+    font-size: 18px;
+    color: #e1e1e1;
+    background: linear-gradient(135deg, #0d0d1a, #0d0d1a); // Örnekteki koyu gradient
+    border: 1px solid #0d0d1a; // Örnekteki sınır rengi
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.5);
+    animation: pulse 1.5s infinite;
+    position: relative;
     overflow: hidden;
-  
-    mat-card-title {
-      font-size: 1.75rem;
-      font-weight: 600;
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid #e0e0e0;
-      color: #333333;
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -50%;
+      width: 200%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #bf00ff, transparent);
+      animation: slide 3s infinite;
     }
-  
-    mat-card-content {
-      padding: 1.5rem;
-  
-      &.stats-grid {
+
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  .error-message {
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+    color: #ff6b6b;
+    background: linear-gradient(135deg, #3a3a52, #2e2e3e);
+    border: 1px solid #40405a;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.6);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -50%;
+      width: 200%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #bf00ff, transparent);
+      animation: slide 3s infinite;
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 30px;
+    font-size: 18px;
+    color: #e1e1e1;
+    background: linear-gradient(135deg, #3a3a52, #2e2e3e);
+    border: 1px dashed #40405a;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -50%;
+      width: 200%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #bf00ff, transparent);
+      animation: slide 3s infinite;
+    }
+
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  .dashboard-content {
+    display: grid; // 2x2 matris için grid düzeni
+    grid-template-columns: repeat(2, 1fr); // 2 sütun
+    gap: 1.5rem; // Örnekteki boşluk
+    justify-content: center; // Kartları ortala
+    align-items: stretch; // Kartlar eşit yükseklikte
+
+    .dashboard-card {
+      flex: 1 1 200px; // Örnekteki esnek genişlik
+      max-width: 500px; // Örnekteki maksimum genişlik
+      background: #3a3a52; // Örnekteki koyu kart arka planı
+      border: 1px solid #40405a; // Örnekteki sınır rengi
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-6px); // Örnekteki yükselme efekti
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(191, 0, 255, 0.4); // Örnekteki gölgeler
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: -50%;
+        width: 200%;
+        height: 6px;
+        background: linear-gradient(90deg, transparent, #bf00ff, transparent); // Örnekteki neon mor degrade
+        animation: slide 3s infinite;
+      }
+
+      .card-content {
         display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: space-between;
-  
-        .stat-card {
-          flex: 1 1 calc(33% - 1rem);
-          min-width: 200px;
-          background: #f9fafb;
-          border-radius: 8px;
-          transition: transform 0.2s, box-shadow 0.2s;
-  
-          &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-          }
-  
-          mat-card-header {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-  
-            .icon-bg {
-              background: rgba(37, 99, 235, 0.1);
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 3rem;
-              height: 3rem;
-  
-              mat-icon {
-                font-size: 1.6rem;
-                color: #2563eb;
-              }
-            }
-  
-            .text {
-              margin-left: 1rem;
-  
-              mat-card-title {
-                font-size: 1.5rem;
-                color: #111827;
-              }
-  
-              mat-card-subtitle {
-                font-size: 0.9rem;
-                color: #6b7280;
-              }
-            }
-          }
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 1.5rem;
+
+        h3 {
+          margin: 0 0 0.75rem; // Örnekteki boşluk
+          font-size: 1rem; // Örnekteki boyut
+          font-weight: 600;
+          text-transform: uppercase;
+          color: #f1f1f1; // Örnekteki renk
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        p {
+          margin: 0;
+          font-size: 2.25rem; // Örnekteki boyut
+          font-weight: 700;
+          background: -webkit-linear-gradient(#bf00ff, #8e00b7); // Örnekteki neon mor gradient
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
       }
-  
-      .loading-container {
-        display: flex;
-        justify-content: center;
-        padding: 2rem 0;
-      }
     }
   }
-  
+}
+
+@keyframes slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}

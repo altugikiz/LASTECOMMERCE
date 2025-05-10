@@ -1,40 +1,42 @@
-<mat-card *ngIf="summary; else loading">
-  <mat-card-title>Welcome, Admin!</mat-card-title>
-  <mat-card-content class="stats-grid">
-    <mat-card class="stat-card products">
-      <mat-card-header>
-        <div mat-card-avatar class="icon-bg"><mat-icon>inventory_2</mat-icon></div>
-        <div class="text">
-          <mat-card-title>{{ summary.totalProducts }}</mat-card-title>
-          <mat-card-subtitle>Products</mat-card-subtitle>
-        </div>
-      </mat-card-header>
-    </mat-card>
+<div class="dashboard-container">
+  <h2>Admin Dashboard</h2>
 
-    <mat-card class="stat-card orders">
-      <mat-card-header>
-        <div mat-card-avatar class="icon-bg"><mat-icon>receipt_long</mat-icon></div>
-        <div class="text">
-          <mat-card-title>{{ summary.totalOrders }}</mat-card-title>
-          <mat-card-subtitle>Orders</mat-card-subtitle>
-        </div>
-      </mat-card-header>
-    </mat-card>
-
-    <mat-card class="stat-card users">
-      <mat-card-header>
-        <div mat-card-avatar class="icon-bg"><mat-icon>people</mat-icon></div>
-        <div class="text">
-          <mat-card-title>{{ summary.totalUsers }}</mat-card-title>
-          <mat-card-subtitle>Users</mat-card-subtitle>
-        </div>
-      </mat-card-header>
-    </mat-card>
-  </mat-card-content>
-</mat-card>
-
-<ng-template #loading>
-  <div class="loading-container">
-    <mat-spinner diameter="60"></mat-spinner>
+  <div *ngIf="isLoading" class="loading-spinner">
+    <p>Loading dashboard data...</p>
   </div>
-</ng-template>
+
+  <div *ngIf="!isLoading && errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && dashboardData" class="dashboard-content">
+    <div class="dashboard-card">
+      <div class="card-content">
+        <h3>Total Users</h3>
+        <p>{{ dashboardData.totalUsers || 0 }}</p>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <div class="card-content">
+        <h3>Total Sellers</h3>
+        <p>{{ dashboardData.totalSellers || 0 }}</p>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <div class="card-content">
+        <h3>Pending Seller Requests</h3>
+        <p>{{ dashboardData.pendingSellerRequests || 0 }}</p>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <div class="card-content">
+        <h3>Total Products</h3>
+        <p>{{ dashboardData.totalProducts || 0 }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && !dashboardData" class="no-data">
+    <p>No dashboard data available.</p>
+  </div>
+</div>

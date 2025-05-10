@@ -15,7 +15,7 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     canActivate: [roleGuard],
-    data: { role: 'ADMIN' },
+    data: { role: 'ROLE_ADMIN' },
     children: [
       { path: 'dashboard',       component: DashboardComponent },
       { path: 'products',        component: ProductsComponent },

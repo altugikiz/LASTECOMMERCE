@@ -12,4 +12,8 @@ public interface UserService {
     User save(User user);
     void deleteById(Long id);
     List<User> getPendingSellerRequests();
+    long countAllUsers();
+    long countSellers();
+    long countPendingSellerRequests();
+
 }
