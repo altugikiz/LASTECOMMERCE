@@ -20,7 +20,7 @@ export class AdminService {
 
   // ---------- Product CRUD ----------
   getProducts(): Observable<AdminProduct[]> {
-    return this.http.get<AdminProduct[]>(`${this.baseUrl}/products`);
+    return this.http.get<AdminProduct[]>('http://localhost:8080/api/products');
   }
 
   createProduct(p: AdminProduct): Observable<AdminProduct> {

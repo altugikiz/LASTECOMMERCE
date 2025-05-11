@@ -1,0 +1,23 @@
+<!-- src/app/checkout/checkout.component.html -->
+<div class="checkout-container">
+  <h2>Ödeme Sayfası</h2>
+
+  <div class="card-wrapper">
+    <label for="card-element">Kart Bilgileri</label>
+    <div id="card-element" class="card-element"></div>
+    <div class="card-errors" *ngIf="error">{{ error }}</div>
+  </div>
+
+  <button
+    class="btn-pay"
+    [disabled]="!stripe || isLoading"
+    (click)="pay()"
+  >
+    <ng-container *ngIf="!isLoading; else loadingTpl">
+      🛒 Öde {{ (amount / 100) | currency:'USD':'symbol':'1.2-2' }}
+    </ng-container>
+    <ng-template #loadingTpl>
+      <span class="spinner"></span> İşlem yapılıyor...
+    </ng-template>
+  </button>
+</div>

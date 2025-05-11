@@ -1,0 +1,20 @@
+<!-- src/app/features/payment/payment.component.html -->
+<div class="payment-container">
+  <!-- Stripe Card Element burada mount edilecek -->
+  <div id="card-element" #cardInfo></div>
+
+  <!-- Ödeme butonu -->
+  <button
+    (click)="pay()"
+    [disabled]="loading || !isCardReady"
+    class="btn-pay"
+  >
+    {{ loading ? 'Ödeniyor…' : 'Ödeme Yap' }}
+  </button>
+
+  <!-- Hata & Başarı Mesajları -->
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+  <div *ngIf="success" class="success-msg">
+    Ödeme başarılı! 🎉
+  </div>
+</div>

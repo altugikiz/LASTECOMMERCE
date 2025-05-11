@@ -1,0 +1,54 @@
+/* src/app/features/payment/payment.component.scss */
+.payment-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  #card-element {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .btn-pay {
+    position: relative;
+    padding: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+
+    // Buton disabled olduğunda (loading) spinner göster
+    &[disabled] {
+      cursor: progress;
+      color: transparent !important;  // yazıyı gizle
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1rem;
+        height: 1rem;
+        margin: -0.5rem 0 0 -0.5rem;
+        border: 2px solid rgba(0,0,0,0.2);
+        border-top-color: rgba(0,0,0,0.6);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+    }
+  }
+
+  .error-msg {
+    color: #b00020;
+  }
+  .success-msg {
+    color: #0a0;
+  }
+}
+
+// Spinner animasyonu
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

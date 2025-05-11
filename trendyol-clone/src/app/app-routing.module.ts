@@ -14,6 +14,7 @@ import { FavoritesComponent }          from './pages/favorites/favorites.compone
 import { AccountComponent }        from './pages/account/account.component';
 import { CategoriesComponent }     from './pages/categories/categories.component';
 import { ProductReviewComponent }  from './pages/product-review/product-review.component';
+import { PaymentComponent } from './pages/payment/payment.component';
 
 import { AuthGuard }               from './services/auth.guard';
 import { roleGuard, roleLoadGuard }from './seller/guards/role.guard';  // path’ı kendine göre düzelt
@@ -31,6 +32,12 @@ const routes: Routes = [
   { path: 'account',              component: AccountComponent,     canActivate: [AuthGuard] },
   { path: 'categories',           component: CategoriesComponent },
   { path: 'products',             component: ProductListComponent },
+
+  { 
+    path: 'payment',              
+    component: PaymentComponent,  
+    canActivate: [AuthGuard]      // ödeme sayfasını sadece login olmuşlara açmak için
+  },
 
   // seller panel (AuthGuard + seller modül içindeki guard’lar)
   {

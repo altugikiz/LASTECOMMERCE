@@ -21,6 +21,9 @@ import { FavoritesComponent } from './pages/favorites/favorites.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductReviewComponent } from './pages/product-review/product-review.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { PaymentComponent } from './pages/payment/payment.component';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +40,9 @@ import { ProductReviewComponent } from './pages/product-review/product-review.co
     OrderHistoryComponent,
     ToastComponent,
     FavoritesComponent,
-    ProductReviewComponent
+    ProductReviewComponent,
+    CheckoutComponent,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,
