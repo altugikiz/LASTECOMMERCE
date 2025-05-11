@@ -11,5 +11,6 @@ public interface ProductService {
     void deleteById(Long id);
     List<Product> getByCategoryId(Long categoryId);
     long countAllProducts();
+    Optional<Product> findByName(String name);
 
 }

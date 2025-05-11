@@ -46,4 +46,9 @@ public class ProductServiceImpl implements ProductService {
         return repo.count();
     }
 
+    @Override
+    public Optional<Product> findByName(String name) {
+        return repo.findByName(name);
+    }
+
 }

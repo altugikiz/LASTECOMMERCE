@@ -87,7 +87,6 @@
 //     }
 // }
 
-
 package com.example.backend.security;
 
 import com.example.backend.entity.User;
@@ -127,17 +126,20 @@ public class JwtUtil {
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         User user = userRepository.findByEmail(username)
-            .orElseThrow(() -> new EntityNotFoundException("User not found: " + username));
-        String roleName = user.getRole().getRoleName(); // örn. "ROLE_ADMIN"
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + username));
 
-        // Database'de role_name zaten ROLE_ ile başlıyorsa, ek bir ön ek ekleme
+        String roleName = user.getRole().getRoleName(); // örn. "ROLE_USER"
         List<String> roles = Collections.singletonList(roleName);
+
+        // Stripe Customer ID'yi al
+        String stripeCustomerId = user.getStripeCustomerId(); // null olabilir, sorun değil
 
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .claim("roles", roles)
+                .claim("stripeCustomerId", stripeCustomerId) // 🌟 burası eklendi
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -166,7 +168,7 @@ public class JwtUtil {
     public Long extractUserId(String token) {
         String username = extractUsername(token);
         User user = userRepository.findByEmail(username)
-                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + username));
         return user.getId();
     }
 }

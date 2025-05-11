@@ -11,6 +11,10 @@ interface JWTPayload {
   roles?: string[];
   authorities?: string[];
   id?: string | number;
+
+  stripeCustomerId?: string;
+  stripe_customer_id?: string;
+
   [key: string]: any;
 }
 
@@ -109,4 +113,11 @@ export class AuthService {
     const payload = this.decodeToken(token);
     return payload.id?.toString() ?? payload.sub ?? null;
   }
+
+  getStripeCustomerIdFromToken(): string | null {
+  const token = this.getToken();
+  if (!token) return null;
+  const payload = this.decodeToken(token);
+  return payload.stripeCustomerId ?? payload.stripe_customer_id ?? null;
+}
 }

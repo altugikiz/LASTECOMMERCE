@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { OrderRequest } from '../models/order-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,4 +31,9 @@ export class OrderService {
   deleteOrdersByUserEmail(email: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/user/${email}`);
   }
+
+  createOrderAfterCheckout(req: OrderRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/create-after-checkout`, req);
+  }
+
 }

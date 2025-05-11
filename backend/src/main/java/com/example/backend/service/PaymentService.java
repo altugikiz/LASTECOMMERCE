@@ -10,4 +10,6 @@ public interface PaymentService {
     Optional<Payment> findById(Long id);
     Payment save(Payment payment);
     void deleteById(Long id);
+
+    List<Payment> findByUserId(Long userId);
 }

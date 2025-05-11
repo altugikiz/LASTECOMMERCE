@@ -8,6 +8,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class StripeService {
+
+  private apiUrl = `${environment.apiUrl}/payments`;
   private stripePromise = loadStripe(environment.stripePublishableKey);
 
   constructor(private http: HttpClient) {
@@ -24,7 +26,9 @@ export class StripeService {
     return this.http
       .post<{ id: string }>(
         `${environment.apiUrl}/payments/customers`,
-        { email }
+        { email } , {
+          headers: {Authorization: 'Bearer ${enviroment.stripeSecretKey}'}
+        }
       )
       .pipe(map(res => res.id));
   }
@@ -34,7 +38,9 @@ export class StripeService {
     return this.http
       .post<{ clientSecret: string }>(
         `${environment.apiUrl}/payments/payment-intents`,
-        { amount, currency }
+        { amount, currency } , {
+          headers: {Authorization: 'Bearer ${enviroment.stripeSecretKey}'} 
+        }
       )
       .pipe(map(res => res.clientSecret));
   }
@@ -52,5 +58,11 @@ export class StripeService {
         });
       })
     );
+  }
+
+  getPaymentMethods(customerId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/payments/methods`, {
+      params: { customerId }
+    });
   }
 }

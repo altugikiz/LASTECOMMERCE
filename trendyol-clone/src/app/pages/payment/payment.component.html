@@ -1,10 +1,20 @@
 <!-- src/app/features/payment/payment.component.html -->
 <div class="payment-container">
-  <!-- Stripe Card Element burada mount edilecek -->
   <div id="card-element" #cardInfo></div>
 
-  <!-- Ödeme butonu -->
+  <!-- Kart Kaydetme Butonu -->
   <button
+    *ngIf="mode==='save-card'"
+    (click)="saveCard()"
+    [disabled]="loading || !isCardReady"
+    class="btn-pay"
+  >
+    {{ loading ? 'Kaydediliyor…' : 'Kartı Kaydet' }}
+  </button>
+
+  <!-- Ödeme Butonu -->
+  <button
+    *ngIf="mode==='payment'"
     (click)="pay()"
     [disabled]="loading || !isCardReady"
     class="btn-pay"
@@ -12,9 +22,8 @@
     {{ loading ? 'Ödeniyor…' : 'Ödeme Yap' }}
   </button>
 
-  <!-- Hata & Başarı Mesajları -->
-  <div *ngIf="error" class="error-msg">{{ error }}</div>
+  <div *ngIf="error"   class="error-msg">{{ error }}</div>
   <div *ngIf="success" class="success-msg">
-    Ödeme başarılı! 🎉
+    İşlem başarılı! 🎉
   </div>
 </div>

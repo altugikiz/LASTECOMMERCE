@@ -94,6 +94,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/payments/**").authenticated()
+                .requestMatchers("/api/orders").authenticated()// authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**", "/api/products/*/reviews").permitAll()
 
 

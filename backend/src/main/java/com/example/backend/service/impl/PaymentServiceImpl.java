@@ -35,4 +35,9 @@ public class PaymentServiceImpl implements PaymentService {
     public void deleteById(Long id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public List<Payment> findByUserId(Long userId) {
+        return repo.findByUserId(userId);
+    }
 }

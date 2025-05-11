@@ -15,12 +15,9 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // Auth API'lerini atla
-    if (
-      req.url.endsWith('/api/auth/login') ||
-      req.url.endsWith('/api/auth/register')
-    ) {
-      return next.handle(req);
-    }
+    if (req.url.includes('/api/auth/')) {
+  return next.handle(req);
+}
 
     const token = this.authService.getToken();
     // Her isteğe application/json ekleyelim

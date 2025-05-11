@@ -1,189 +1,169 @@
-/* src/app/pages/account/account.component.scss */
+// -------------------- account.component.scss --------------------
+
+// Renk değişkenleri
+$primary:   #42a5f5;
+$accent:    #f48fb1;
+$danger:    #e84545;
+$text:      #333;
+$muted:     #777;
+$bg-light:  #f9f9f9;
+$shadow:    rgba(0, 0, 0, 0.1);
 
 .account-container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', sans-serif;
-  transition: all 0.3s ease;
-  
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px $shadow;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+
+  // Başlık
   h2 {
-    font-size: 30px;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    position: relative;
+    font-size: 2rem;
+    color: $primary;
     text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
 
     &::after {
       content: '';
-      display: block;
-      width: 60px;
-      height: 3px;
-      background: #5c6bc0;
-      margin: 10px auto 0;
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3rem;
+      height: 0.25rem;
+      background: $accent;
       border-radius: 2px;
     }
   }
 
+  // Kullanıcı bilgileri
   .info {
-    width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
 
     p {
       margin: 0;
-      font-size: 16px;
-      color: #555;
+      color: $text;
+      font-size: 1rem;
+
       strong {
-        color: #34495e;
+        color: $primary;
       }
     }
   }
 
+  // Admin/Seller panel butonu
   .panel-action {
-    margin-bottom: 30px;
-    width: 100%;
     text-align: center;
+    margin-bottom: 2rem;
 
     button {
-      background: linear-gradient(135deg, #3498db, #2980b9);
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      background: $accent;
       color: #fff;
       border: none;
-      padding: 12px 28px;
-      border-radius: 30px;
-      font-size: 16px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s ease;
-      box-shadow: 0 6px 12px rgba(41, 128, 185, 0.3);
+      transition: filter 0.2s ease, transform 0.2s ease;
 
       &:hover {
-        background: linear-gradient(135deg, #2980b9, #2471a3);
+        filter: brightness(0.9);
         transform: translateY(-2px);
       }
     }
   }
 
-  .orders-section {
-    width: 100%;
-    margin-bottom: 30px;
+  hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 2rem 0;
+  }
 
+  // Siparişler bölümü
+  .orders-section {
     h3 {
-      color: #5c6bc0;
-      font-size: 22px;
-      border-left: 4px solid #5c6bc0;
-      padding-left: 10px;
-      margin-bottom: 20px;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: $accent;
+      border-left: 4px solid $accent;
+      padding-left: 0.5rem;
     }
 
     ul {
       list-style: none;
       padding: 0;
-      margin: 0;
 
       li {
-        background-color: #2196f3; // Canlı mavi (Material Blue 500)
-        color: #ffffff; // Beyaz yazı rengi
-        border-radius: 14px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        margin-bottom: 12px;
-        padding: 18px 25px;
-        font-size: 15px;
-        transition: all 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: $bg-light;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        color: $text;
 
-      /* 
-        background-color: #f4f4f4;
-        border-radius: 14px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-        margin-bottom: 12px;
-        padding: 18px 25px;
-        font-size: 15px;
-        transition: all 0.2s ease;
- */
-        &:hover {
-
-          background-color: #1976d2; // Hover'da biraz daha koyu mavi (Material Blue 700)
-          transform: translateY(-4px);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
-          /* transform: translateY(-4px);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); */
+        span {
+          font-weight: 500;
         }
       }
+    }
 
-      .no-orders {
-        margin-top: 20px;
-        color: #999;
-        font-size: 16px;
-        font-style: italic;
-        text-align: center;
-      }
+    .no-orders {
+      color: $muted;
+      font-style: italic;
+    }
+  }
+
+  // Sepetten sipariş ve çıkış butonları
+  .cart-action,
+  .logout-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+
+    button {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: filter 0.2s ease, transform 0.2s ease;
     }
   }
 
   .cart-action {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 30px;
-
-    .place-order {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #43cea2, #185a9d);
+    button {
+      background: linear-gradient(135deg, $primary, $accent);
       color: #fff;
       border: none;
-      padding: 10px 24px;
-      font-size: 15px;
-      font-weight: 600;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 6px 12px rgba(24, 90, 157, 0.3);
-
-      i {
-        font-size: 18px;
-      }
 
       &:hover {
-        background: linear-gradient(135deg, #185a9d, #43cea2);
+        filter: brightness(0.9);
         transform: translateY(-2px);
       }
     }
   }
 
   .logout-action {
-    width: 100%;
-    text-align: center;
-
-    button.logout {
-      background: transparent;
-      color: #c0392b;
-      border: 2px solid #c0392b;
-      padding: 10px 26px;
-      border-radius: 30px;
-      font-size: 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s ease, color 0.3s ease;
+    button {
+      background: #fff;
+      color: $danger;
+      border: 2px solid $danger;
 
       &:hover {
-        background: #c0392b;
+        background: $danger;
         color: #fff;
+        transform: translateY(-2px);
       }
     }
-  }
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .account-container {
-    padding: 20px;
-
-    h2 { font-size: 26px; }
-
-    .orders-section h3 { font-size: 20px; }
   }
 }

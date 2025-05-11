@@ -2,12 +2,21 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.OrderDto;
 import com.example.backend.dto.OrderItemDto;
+import com.example.backend.dto.OrderRequest;
 import com.example.backend.entity.Order;
+import com.example.backend.entity.OrderItem;
+import com.example.backend.entity.User;
+import com.example.backend.entity.Product;
 import com.example.backend.service.OrderService;
+import com.example.backend.service.ProductService;
+import com.example.backend.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +26,40 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final OrderService orderService;
+    private final UserService userService;
+    private final ProductService productService;
+
+     @PostMapping("/create-after-checkout")
+    public ResponseEntity<OrderDto> createOrderAfterCheckout(@RequestBody OrderRequest request) {
+        User user = userService.findByEmail(request.getUserEmail())
+            .orElseThrow(() -> new IllegalArgumentException("User not found: " + request.getUserEmail()));
+
+        // Sipariş nesnesi oluştur
+        Order order = Order.builder()
+            .orderDate(LocalDate.now())
+            .status("PENDING_APPROVAL") // Enum yerine string olarak yönetiliyor
+            .totalAmount(request.getTotalPrice())
+            .user(user)
+            .build();
+
+        // Ürünleri OrderItem olarak eşleştir
+        List<OrderItem> items = request.getProductNames().stream().map(name -> {
+            Product p = productService.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + name));
+            return OrderItem.builder()
+                .product(p)
+                .orderedProductPrice(p.getPrice())
+                .quantity(1)
+                .itemStatus("PENDING")
+                .order(order)
+                .build();
+        }).collect(Collectors.toList());
+
+        order.setItems(items);
+
+        Order saved = orderService.save(order);
+        return ResponseEntity.status(201).body(toDto(saved));
+    }
 
     @GetMapping
     public List<OrderDto> listAll() {
@@ -85,7 +128,10 @@ public class OrderController {
             order.getStatus(),
             order.getTotalAmount(),
             order.getUser().getId(),
-            items
+            items,
+            order.getItems().stream()
+                .map(i -> i.getProduct().getName())
+                .collect(Collectors.toList())
         );
     }
 }

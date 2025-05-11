@@ -7,18 +7,14 @@ import com.example.backend.service.PaymentService;
 import com.example.backend.service.StripeService;
 import com.example.backend.service.UserService;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Customer;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.PaymentMethod;
+import com.stripe.model.*;
+import com.stripe.param.PaymentMethodListParams;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,64 +26,84 @@ public class PaymentController {
     private final UserService userService;
     private final StripeService stripeService;
 
-    /**
-     * 1) Sadece Stripe Customer yarat ve ID’sini dön
-     */
+    /** 1) Customer yaratır */
     @PostMapping("/customers")
-    public ResponseEntity<Map<String, String>> createCustomer(@RequestBody Map<String, String> body) throws StripeException {
+    public ResponseEntity<Map<String, String>> createCustomer(@RequestBody Map<String, String> body)
+            throws StripeException {
         String email = body.get("email");
-        if (email == null) {
+        if (email == null)
             return ResponseEntity.badRequest().build();
-        }
         Customer customer = stripeService.createCustomer(email);
         return ResponseEntity.ok(Map.of("id", customer.getId()));
     }
 
-    /**
-     * 2) Tutar (cents) ve currency al, PaymentIntent oluştur, clientSecret’i dön
-     */
+    /** 2) Basit PaymentIntent oluşturur (clientSecret dön) */
     @PostMapping("/payment-intents")
-    public ResponseEntity<Map<String, String>> createPaymentIntent(@RequestBody Map<String, Object> body) throws StripeException {
-        Object amtObj = body.get("amount");
-        Object curObj = body.get("currency");
-        if (amtObj == null || curObj == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        long amount = Long.parseLong(amtObj.toString());
-        String currency = curObj.toString();
+    public ResponseEntity<Map<String, String>> createPaymentIntent(@RequestBody Map<String, Object> body)
+            throws StripeException {
+        Object amt = body.get("amount");
+        Object cur = body.get("currency");
+        Object customerId = body.get("customerId"); // ← EKLENDİ
 
-        PaymentIntent intent = stripeService.createPaymentIntent(amount, currency);
+        if (amt == null || cur == null || customerId == null)
+            return ResponseEntity.badRequest().build();
+
+        long amount = Long.parseLong(amt.toString());
+        String currency = cur.toString();
+        String customer = customerId.toString(); // ← String olarak customer ID
+
+        PaymentIntent intent = stripeService.createPaymentIntent(amount, currency, customer);
         return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
     }
 
-    /**
-     * Mevcut akış için: hem Customer yaratıp hem Intent oluşturup
-     * DB’ye kaydeden endpoint
-     */
+    /** 3) SetupIntent oluşturup clientSecret döner (kart kaydetme için) */
+    @PostMapping("/setup-intent")
+    public ResponseEntity<Map<String, String>> createSetupIntent(@RequestBody Map<String, String> body)
+            throws StripeException {
+        String customerId = body.get("customerId");
+        if (customerId == null)
+            return ResponseEntity.badRequest().build();
+        SetupIntent intent = stripeService.createSetupIntent(customerId);
+        return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
+    }
+
+    /** 4) Bir customer’ın kayıtlı PaymentMethodlarını listeler */
+    @GetMapping("/methods")
+    public ResponseEntity<List<PaymentMethod>> listPaymentMethods(@RequestParam String customerId)
+            throws StripeException {
+        // Tip:CARD olarak sınırlıyoruz
+        PaymentMethodListParams params = PaymentMethodListParams.builder()
+                .setCustomer(customerId)
+                .setType(PaymentMethodListParams.Type.CARD)
+                .build();
+        List<PaymentMethod> methods = stripeService.listPaymentMethods(params);
+        return ResponseEntity.ok(methods);
+    }
+
+    /** 5) Stripe → DB kaydı ile tam halkayı kurar */
     @PostMapping("/stripe-intent")
     public ResponseEntity<PaymentDto> createIntent(@RequestBody PaymentDto dto) throws StripeException {
         User u = userService.findById(dto.userId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id"));
-
-        // 1) Stripe customer
-        Customer customer = stripeService.createCustomer(u.getEmail());
-        u.setStripeCustomerId(customer.getId());
+        Customer c = stripeService.createCustomer(u.getEmail());
+        u.setStripeCustomerId(c.getId());
         userService.save(u);
 
-        // 2) Intent
-        long amountInCents = dto.amount()
-                .multiply(BigDecimal.valueOf(100))
-                .longValue();
-        PaymentIntent intent = stripeService.createPaymentIntent(amountInCents, dto.currency());
+        long cents = dto.amount().multiply(BigDecimal.valueOf(100)).longValue();
 
-        // 3) DB kaydı
+        // ← Üçüncü parametre olarak customer ID eklenmeli
+        PaymentIntent intent = stripeService.createPaymentIntent(cents, dto.currency(), c.getId());
+
+        // Geri kalanlar aynı
         Payment p = toEntity(dto);
         p.setUser(u);
-        p.setStripeCustomerId(customer.getId());
+        p.setStripeCustomerId(c.getId());
         p.setStripePaymentIntentId(intent.getId());
+        p.setPaymentMethod(intent.getPaymentMethod());
+        p.setStatus(intent.getStatus());
 
         if (intent.getPaymentMethod() != null) {
-            PaymentMethod pm = PaymentMethod.retrieve(intent.getPaymentMethod());
+            PaymentMethod pm = stripeService.retrievePaymentMethod(intent.getPaymentMethod());
             PaymentMethod.Card card = pm.getCard();
             if (card != null) {
                 p.setCardBrand(card.getBrand());
@@ -101,6 +117,29 @@ public class PaymentController {
         return ResponseEntity.ok(toDto(saved));
     }
 
+    /** 6) CRUD: ekstra “kullanıcıya göre” listeleme */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PaymentDto>> listByUser(@PathVariable Long userId) {
+        List<PaymentDto> dtos = paymentService.findByUserId(userId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
+    }
+
+    // —————— ↓ Mevcut generic CRUD endpoint’leriniz ↓ ——————
+
+    @GetMapping
+    public List<PaymentDto> listAll() {
+        return paymentService.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentDto> getById(@PathVariable Long id) {
+        return paymentService.findById(id)
+                .map(p -> ResponseEntity.ok(toDto(p)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<PaymentDto> create(@RequestBody PaymentDto dto) {
         Payment p = toEntity(dto);
@@ -109,9 +148,8 @@ public class PaymentController {
         p.setUser(u);
         p.setStripeCustomerId(dto.stripeCustomerId());
         p.setStripePaymentIntentId(dto.stripePaymentIntentId());
-
         Payment saved = paymentService.save(p);
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDto(saved));
+        return ResponseEntity.status(201).body(toDto(saved));
     }
 
     @PutMapping("/{id}")
@@ -120,13 +158,11 @@ public class PaymentController {
                 .map(existing -> {
                     Payment toSave = toEntity(dto);
                     toSave.setId(id);
-
                     User u = userService.findById(dto.userId())
                             .orElseThrow(() -> new IllegalArgumentException("Invalid user id"));
                     toSave.setUser(u);
                     toSave.setStripeCustomerId(dto.stripeCustomerId());
                     toSave.setStripePaymentIntentId(dto.stripePaymentIntentId());
-
                     Payment updated = paymentService.save(toSave);
                     return ResponseEntity.ok(toDto(updated));
                 })
@@ -142,21 +178,7 @@ public class PaymentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public List<PaymentDto> listAll() {
-        return paymentService.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<PaymentDto> getById(@PathVariable Long id) {
-        return paymentService.findById(id)
-                .map(p -> ResponseEntity.ok(toDto(p)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // DTO ↔ Entity dönüşümleri
+    // —————— DTO ↔ Entity dönüştürücü metodlar ——————
 
     private PaymentDto toDto(Payment p) {
         return new PaymentDto(
@@ -171,8 +193,7 @@ public class PaymentController {
                 p.getAmount(),
                 p.getCurrency(),
                 p.getStatus(),
-                p.getUser().getId()
-        );
+                p.getUser().getId());
     }
 
     private Payment toEntity(PaymentDto d) {

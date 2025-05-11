@@ -11,5 +11,6 @@ public record OrderDto(
     String status,
     BigDecimal totalAmount,
     Long userId,
-    List<OrderItemDto> items
+    List<OrderItemDto> items,
+    List<String> productNames
 ) {}

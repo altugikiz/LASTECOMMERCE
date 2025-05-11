@@ -1,14 +1,16 @@
-// src/main/java/com/example/backend/controller/AuthController.java
 package com.example.backend.controller;
 
 import com.example.backend.dto.AuthRequest;
-import com.example.backend.dto.RegisterRequest;
 import com.example.backend.dto.AuthResponse;
-import com.example.backend.entity.User;
+import com.example.backend.dto.RegisterRequest;
 import com.example.backend.entity.Role;
+import com.example.backend.entity.User;
 import com.example.backend.repository.RoleRepository;
-import com.example.backend.service.UserService;
 import com.example.backend.security.JwtUtil;
+import com.example.backend.service.StripeService;
+import com.example.backend.service.UserService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Customer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,23 +29,21 @@ public class AuthController {
     private final UserService userService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StripeService stripeService;  // ⭐ Stripe servis eklendi
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
-        // Gelen verilerin doğruluğunu kontrol et
         if (req.getEmail() == null || req.getEmail().trim().isEmpty() ||
             req.getPassword() == null || req.getPassword().trim().isEmpty() ||
             req.getFirstName() == null || req.getFirstName().trim().isEmpty() ||
             req.getLastName() == null || req.getLastName().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("All fields (email, password, firstName, lastName) are required");
+            return ResponseEntity.badRequest().body("All fields are required");
         }
 
-        // Email zaten kullanılıyorsa hata dön
         if (userService.findByEmail(req.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already in use");
         }
 
-        // USER rolünü kontrol et ve oluştur
         Role userRole = roleRepository.findByRoleName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("USER role not found"));
 
@@ -67,10 +67,27 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest req) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword()));
-        String token = jwtUtil.generateToken(req.getEmail());
+
+        // Kullanıcıyı bul
+        User user = userService.findByEmail(req.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Stripe müşteri ID'si yoksa oluştur
+        if (user.getStripeCustomerId() == null || user.getStripeCustomerId().isEmpty()) {
+            try {
+                Customer customer = stripeService.createCustomer(user.getEmail());
+                user.setStripeCustomerId(customer.getId());
+                userService.save(user); // Stripe ID’yi DB’ye kaydet
+            } catch (StripeException e) {
+                return ResponseEntity.badRequest().body("Stripe customer creation failed: " + e.getMessage());
+            }
+        }
+
+        // Token oluştur ve dön
+        String token = jwtUtil.generateToken(user.getEmail());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

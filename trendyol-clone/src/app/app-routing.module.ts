@@ -32,6 +32,7 @@ const routes: Routes = [
   { path: 'account',              component: AccountComponent,     canActivate: [AuthGuard] },
   { path: 'categories',           component: CategoriesComponent },
   { path: 'products',             component: ProductListComponent },
+  { path: 'payment/save-card', component: PaymentComponent },
 
   { 
     path: 'payment',              
