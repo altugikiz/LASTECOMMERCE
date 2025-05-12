@@ -7,5 +7,5 @@ export interface SellerProduct {
   stock: number;
   category: string;       // ← ekleyin
   isActive: boolean;      // ← ekleyin (true olarak gönderin)
-  imageUrl?: string;      // eğer formunuz destekliyorsa
+  image?: string;      // eğer formunuz destekliyorsa
 }

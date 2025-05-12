@@ -27,11 +27,9 @@ export class SellerService {
 
   // 📊 Dashboard
   getDashboard(): Observable<DashboardData> {
-    const sellerId = this.getSellerId();
-    return this.http.get<DashboardData>(
-      `${this.baseUrl}/dashboard?sellerId=${sellerId}`
-    );
-  }
+  const sellerId = this.getSellerId();
+  return this.http.get<DashboardData>(`${this.baseUrl}/dashboard?sellerId=${sellerId}`);
+}
 
   // 📦 Ürün listesi
   getProducts(): Observable<SellerProduct[]> {
@@ -67,11 +65,11 @@ export class SellerService {
 
   // ❌ Ürünü sil
   deleteProduct(id: number): Observable<void> {
-    const sellerId = this.getSellerId();
-    return this.http.delete<void>(
-      `${this.baseUrl}/products/${id}?sellerId=${sellerId}`
-    );
-  }
+  const sellerId = this.getSellerId();
+  return this.http.delete<void>(
+    `${this.baseUrl}/products/${id}?sellerId=${sellerId}`
+  );
+}
 }
 
 

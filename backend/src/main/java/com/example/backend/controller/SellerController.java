@@ -59,6 +59,59 @@ public class SellerController {
         return ResponseEntity.status(201).body(toDto(saved));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
+            @RequestBody ProductDto dto,
+            @RequestParam Long sellerId) {
+        // 1) Seller kontrolü
+        User seller = userService.findById(sellerId)
+                .orElseThrow(() -> new EntityNotFoundException("Seller not found"));
+
+        // 2) Ürün kontrolü
+        Product existing = productService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        // 3) Yetki kontrolü
+        if (!existing.getSeller().getId().equals(seller.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        // 4) Güncelleme
+        existing.setName(dto.name());
+        existing.setDescription(dto.description());
+        existing.setPrice(dto.price());
+        existing.setStock(dto.stock());
+        existing.setImage(dto.image());
+
+        if (dto.categoryId() != null) {
+            existing.setCategory(categoryService.findById(dto.categoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid category")));
+        }
+
+        Product updated = productService.save(existing);
+        return ResponseEntity.ok(toDto(updated));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id,
+            @RequestParam Long sellerId) {
+        // 1) Seller doğrulama
+        User seller = userService.findById(sellerId)
+                .orElseThrow(() -> new EntityNotFoundException("Seller not found"));
+
+        // 2) Ürün doğrulama
+        Product product = productService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        // 3) Yetki kontrolü
+        if (!product.getSeller().getId().equals(seller.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        productService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private ProductDto toDto(Product p) {
         return new ProductDto(
                 p.getId(),

@@ -10,7 +10,6 @@ import java.util.List;
 
 import jakarta.validation.constraints.Pattern;
 
-
 // import org.hibernate.annotations.processing.Pattern;
 
 @Entity
@@ -47,5 +46,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id") // seller_id kolonu eklenmeli
+    private User seller;
 
 }

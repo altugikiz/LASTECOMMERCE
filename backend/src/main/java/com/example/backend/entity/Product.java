@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Product {
 
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private Long id;
@@ -26,7 +26,7 @@ public class Product {
     private String description;
 
     @Column(length = 255)
-    private String image;      // opsiyonel
+    private String image; // opsiyonel
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -35,7 +35,7 @@ public class Product {
     private Integer stock;
 
     @Column(name = "product_rate", precision = 3, scale = 2)
-    private BigDecimal rate;       // opsiyonel
+    private BigDecimal rate; // opsiyonel
 
     @Column(name = "review_count")
     private Integer reviewCount;
@@ -52,9 +52,8 @@ public class Product {
         this.createdAt = LocalDateTime.now();
     }
 
-        
     @ManyToOne
-    @JoinColumn(name = "seller_id", nullable = false)
+    @JoinColumn(name = "seller_id")
     private User seller;
 
 }
