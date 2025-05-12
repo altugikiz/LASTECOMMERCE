@@ -51,4 +51,9 @@ public class ProductServiceImpl implements ProductService {
         return repo.findByName(name);
     }
 
+    // 🆕 Seller'a ait ürünleri getir
+    public List<Product> findBySellerId(Long sellerId) {
+        return repo.findBySeller_Id(sellerId);
+    }
+
 }

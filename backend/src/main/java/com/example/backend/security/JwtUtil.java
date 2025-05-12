@@ -121,7 +121,8 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(String username) {
+    //Eskisi buydu güncelledim geri alınabilir
+    /* public String generateToken(String username) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
@@ -142,7 +143,29 @@ public class JwtUtil {
                 .claim("stripeCustomerId", stripeCustomerId) // 🌟 burası eklendi
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
-    }
+    } */
+
+    public String generateToken(String username) {
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + jwtExpiration);
+
+    User user = userRepository.findByEmail(username)
+            .orElseThrow(() -> new EntityNotFoundException("User not found: " + username));
+
+    String roleName = user.getRole().getRoleName();
+    List<String> roles = Collections.singletonList(roleName);
+    String stripeCustomerId = user.getStripeCustomerId();
+
+    return Jwts.builder()
+            .setSubject(username)
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .claim("id", user.getId()) // 👈 USER ID burada claim'e eklendi
+            .claim("roles", roles)
+            .claim("stripeCustomerId", stripeCustomerId)
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+            .compact();
+}
 
     public String extractUsername(String token) {
         return parseClaims(token).getSubject();

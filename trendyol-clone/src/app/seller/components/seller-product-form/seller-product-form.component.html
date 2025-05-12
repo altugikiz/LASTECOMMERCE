@@ -1,48 +1,53 @@
 <!-- src/app/seller/components/seller-product-form/seller-product-form.component.html -->
-<div class="card product-form">
-    <h2>{{ isEdit ? 'Ürünü Düzenle' : 'Yeni Ürün Ekle' }}</h2>
-  
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <!-- name, description, price, stock, imageUrl, category inputları buraya -->
-      <div class="form-row">
-        <label>Adı</label>
-        <input formControlName="name" />
-      </div>
-      <div class="form-row">
-        <label>Açıklama</label>
-        <textarea formControlName="description"></textarea>
-      </div>
-      <div class="form-row double">
-        <div>
-          <label>Fiyat</label>
-          <input type="number" formControlName="price" />
-        </div>
-        <div>
-          <label>Stok</label>
-          <input type="number" formControlName="stock" />
-        </div>
-      </div>
-      <div class="form-row double">
-        <div>
-          <label>Resim URL</label>
-          <input formControlName="imageUrl" />
-        </div>
-        <div>
-          <label>Kategori</label>
-          <input formControlName="category" />
-        </div>
-      </div>
-  
-      <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
-  
+ <div class="product-form-container">
+  <h2>{{ isEdit ? 'Ürünü Düzenle' : 'Yeni Ürün Ekle' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Ürün Adı -->
+    <label>
+      Adı:
+      <input formControlName="name" type="text" placeholder="Ürün adı girin" />
+    </label>
+
+    <!-- Açıklama -->
+    <label>
+      Açıklama:
+      <textarea formControlName="description" rows="3" placeholder="Açıklama girin"></textarea>
+    </label>
+
+    <!-- Fiyat -->
+    <label>
+      Fiyat:
+      <input formControlName="price" type="number" min="0" step="0.01" />
+    </label>
+
+    <!-- Stok -->
+    <label>
+      Stok:
+      <input formControlName="stock" type="number" min="0" />
+    </label>
+
+    <!-- Resim -->
+    <label>
+      Resim URL:
+      <input formControlName="image" type="text" placeholder="https://..." />
+    </label>
+
+    <!-- Kategori ID -->
+    <label>
+      Kategori ID:
+      <input formControlName="categoryId" type="number" min="1" />
+    </label>
+
+    <!-- Hata Mesajı -->
+    <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
+
+    <!-- Butonlar -->
+    <div class="form-actions">
       <button type="submit" [disabled]="submitting">
-        {{ submitting 
-             ? (isEdit ? 'Güncelleniyor…' : 'Ekleniyor…') 
-             : (isEdit ? 'Güncelle'       : 'Ekle') }}
+        {{ isEdit ? 'Güncelle' : 'Ekle' }}
       </button>
-      <button type="button" routerLink="/seller/products" >
-        Vazgeç
-      </button>
-    </form>
-  </div>
-  
+      <button type="button" (click)="router.navigate(['/seller/products'])">Vazgeç</button>
+    </div>
+  </form>
+</div>

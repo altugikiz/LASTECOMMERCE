@@ -51,4 +51,10 @@ public class Product {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+        
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false)
+    private User seller;
+
 }

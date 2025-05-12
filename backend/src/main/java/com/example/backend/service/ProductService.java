@@ -12,5 +12,6 @@ public interface ProductService {
     List<Product> getByCategoryId(Long categoryId);
     long countAllProducts();
     Optional<Product> findByName(String name);
+    List<Product> findBySellerId(Long sellerId);
 
 }

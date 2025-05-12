@@ -21,24 +21,25 @@ export class SellerProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
-  }
+  this.loadProducts();
+}
 
-  loadProducts(): void {
-    this.loading = true;
-    this.error = null;
-    this.sellerService.getProducts().subscribe({
-      next: list => {
-        this.products = list;
-        this.loading = false;
-      },
-      error: err => {
-        this.error = 'Failed to load products.';
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  }
+loadProducts(): void {
+  this.loading = true;
+  this.error = null;
+
+  this.sellerService.getProducts().subscribe({
+    next: list => {
+      this.products = list;
+      this.loading = false;
+    },
+    error: err => {
+      this.error = 'Failed to load products.';
+      console.error(err);
+      this.loading = false;
+    }
+  });
+}
 
   createProduct(): void {
     this.router.navigate(['/seller/products/new']);

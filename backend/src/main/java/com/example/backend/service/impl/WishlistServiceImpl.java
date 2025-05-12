@@ -28,20 +28,21 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public List<ProductDto> getWishlist(Long userId) {
         return wishlistRepo.findByUser_Id(userId).stream()
-            .map(WishlistItem::getProduct)
-            .map(p -> new ProductDto(
-                p.getId(),               // Long id
-                p.getName(),             // String name
-                p.getDescription(),      // String description
-                p.getImage(),            // String image
-                p.getPrice(),            // BigDecimal price
-                p.getStock(),            // Integer stock
-                p.getRate(),             // BigDecimal rate
-                p.getReviewCount(),      // Integer reviewCount
-                p.getCategory().getId(), // Long categoryId
-                List.of()                // List<ReviewDto> reviews — boş bırakıyoruz
-            ))
-            .collect(Collectors.toList());
+                .map(WishlistItem::getProduct)
+                .map(p -> new ProductDto(
+                        p.getId(),
+                        p.getName(),
+                        p.getDescription(),
+                        p.getImage(),
+                        p.getPrice(),
+                        p.getStock(),
+                        p.getRate(),
+                        p.getReviewCount(),
+                        p.getCategory() != null ? p.getCategory().getId() : null,
+                        List.of(),
+                        p.getSeller() != null ? p.getSeller().getId() : null // 🆕 sellerId eklendi
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -49,9 +50,9 @@ public class WishlistServiceImpl implements WishlistService {
         if (wishlistRepo.findByUser_IdAndProduct_Id(userId, productId).isEmpty()) {
             var item = new WishlistItem();
             item.setUser(userRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId)));
+                    .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId)));
             item.setProduct(productRepo.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId)));
+                    .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId)));
             wishlistRepo.save(item);
         }
     }
@@ -59,6 +60,6 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public void removeFromWishlist(Long userId, Long productId) {
         wishlistRepo.findByUser_IdAndProduct_Id(userId, productId)
-            .ifPresent(wishlistRepo::delete);
+                .ifPresent(wishlistRepo::delete);
     }
 }

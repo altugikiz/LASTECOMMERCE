@@ -14,5 +14,6 @@ public record ProductDto(
     BigDecimal rate,
     Integer reviewCount,
     Long categoryId,
-    List<ReviewDto> reviews // Yeni alan: yorumların listesi
+    List<ReviewDto> reviews ,  // Yeni alan: yorumların listesi
+    Long sellerId
 ) {}

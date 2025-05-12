@@ -4,9 +4,11 @@ import com.example.backend.dto.ProductDto;
 import com.example.backend.dto.ReviewDto;
 import com.example.backend.entity.Category;
 import com.example.backend.entity.Product;
+import com.example.backend.entity.User;
 import com.example.backend.service.CategoryService;
 import com.example.backend.service.ProductService;
 import com.example.backend.service.ReviewService;
+import com.example.backend.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final ReviewService reviewService;
+    private final UserService userService;
 
     @GetMapping
     public List<ProductDto> getAll() {
@@ -82,35 +85,43 @@ public class ProductController {
 
     /** DTO'ya yorum listesini de ekliyoruz */
     private ProductDto toDto(Product p) {
-        List<ReviewDto> reviews = reviewService.findByProductId(p.getId());
-        return new ProductDto(
-            p.getId(),
-            p.getName(),
-            p.getDescription(),
-            p.getImage(),
-            p.getPrice(),
-            p.getStock(),
-            p.getRate(),
-            p.getReviewCount(),
-            p.getCategory() != null ? p.getCategory().getId() : null,
-            reviews
-        );
-    }
+    List<ReviewDto> reviews = reviewService.findByProductId(p.getId());
+    return new ProductDto(
+        p.getId(),
+        p.getName(),
+        p.getDescription(),
+        p.getImage(),
+        p.getPrice(),
+        p.getStock(),
+        p.getRate(),
+        p.getReviewCount(),
+        p.getCategory() != null ? p.getCategory().getId() : null,
+        reviews,
+        p.getSeller() != null ? p.getSeller().getId() : null  // 🆕 sellerId
+    );
+}
 
     private Product toEntity(ProductDto d) {
-        Product p = new Product();
-        p.setName(d.name());
-        p.setDescription(d.description());
-        p.setImage(d.image());
-        p.setPrice(d.price());
-        p.setStock(d.stock());
-        p.setRate(d.rate());
-        p.setReviewCount(d.reviewCount());
-        if (d.categoryId() != null) {
-            Category c = categoryService.findById(d.categoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid category"));
-            p.setCategory(c);
-        }
-        return p;
+    Product p = new Product();
+    p.setName(d.name());
+    p.setDescription(d.description());
+    p.setImage(d.image());
+    p.setPrice(d.price());
+    p.setStock(d.stock());
+    p.setRate(d.rate());
+    p.setReviewCount(d.reviewCount());
+
+    if (d.categoryId() != null) {
+        Category c = categoryService.findById(d.categoryId())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid category"));
+        p.setCategory(c);
+    }
+
+    if (d.sellerId() != null) {
+        User seller = userService.findById(d.sellerId())
+        .orElseThrow(() -> new IllegalArgumentException("Invalid seller"));
+        p.setSeller(seller);
+    }
+    return p;
     }
 }
