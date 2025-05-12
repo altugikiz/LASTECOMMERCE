@@ -83,6 +83,42 @@ public class SecurityConfig {
 
     // SecurityConfig.java
 
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     http
+    //         .csrf(csrf -> csrf.disable())
+    //         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //         .authenticationProvider(authenticationProvider())
+    //         .authorizeHttpRequests(auth -> auth
+    //             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+    //             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+    //             .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+    //             .requestMatchers("/api/auth/**").permitAll()
+    //             .requestMatchers("/api/payments/**").authenticated()
+    //             .requestMatchers("/api/orders").authenticated()// authenticated()
+    //             .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**", "/api/products/*/reviews").permitAll()
+
+
+    //             // b) Ürünleri listeleyen GET herkes için açık
+    //             .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**").permitAll()
+
+
+    //             // Kategori ekleme (POST) için ek satır:
+    //             .requestMatchers(HttpMethod.POST,"/api/categories/**" , "/api/products/**").permitAll()
+
+    //             // c) Rol bazlı endpoint’ler
+
+    //             .requestMatchers("/api/admin/**").hasRole("ADMIN")
+    //             .requestMatchers("/api/seller/**").hasRole("SELLER")
+    //             .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN", "SELLER")
+    //             .anyRequest().authenticated()
+    //         )
+    //         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+    //         .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+    //     return http.build();
+    // } 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -90,31 +126,46 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
+                // 1) OPTIONS her yere açık
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+
+                // 2) Auth işlemleri (login/register) açık
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/payments/**").authenticated()
-                .requestMatchers("/api/orders").authenticated()// authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**", "/api/products/*/reviews").permitAll()
 
+                // 3) Public GET’ler (ürün, kategori, yorum)
+                .requestMatchers(HttpMethod.GET,
+                                 "/api/products/**",
+                                 "/api/categories/**",
+                                 "/api/products/*/reviews")
+                  .permitAll()
 
-                // b) Ürünleri listeleyen GET herkes için açık
-                .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**").permitAll()
+                // 4) Ödeme endpoint’i (kullanıcı logged in olmalı)
+                .requestMatchers(HttpMethod.POST, "/api/payments/**")
+                  .authenticated()
 
+                // 5) Sipariş oluşturma (checkout sonrası)
+                .requestMatchers(HttpMethod.POST, "/api/orders/create-after-checkout")
+                  .authenticated()
 
-                // Kategori ekleme (POST) için ek satır:
-                .requestMatchers(HttpMethod.POST,"/api/categories/**" , "/api/products/**").permitAll()
+                // 6) Satıcı onay endpoint’i → yalnızca SATI­C­I rolü
+                .requestMatchers(HttpMethod.PUT, "/api/orders/seller/orders/**")
+                  .hasRole("SELLER")
 
-                // c) Rol bazlı endpoint’ler
+                // 7) Tüm diğer /api/orders/** istekleri → authenticated
+                .requestMatchers("/api/orders/**")
+                  .authenticated()
 
+                // 8) Rol bazlı genel kurallar
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/seller/**").hasRole("SELLER")
-                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN", "SELLER")
+                .requestMatchers("/api/user/**")
+                  .hasAnyRole("USER","ADMIN","SELLER")
+
+                // 9) Geri kalan tüm istekler authenticated
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         return http.build();
     }
 

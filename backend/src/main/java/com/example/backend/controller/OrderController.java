@@ -1,15 +1,17 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.OrderRequest;
 import com.example.backend.dto.OrderDto;
 import com.example.backend.dto.OrderItemDto;
-import com.example.backend.dto.OrderRequest;
 import com.example.backend.entity.Order;
 import com.example.backend.entity.OrderItem;
+import com.example.backend.entity.Payment;
 import com.example.backend.entity.User;
 import com.example.backend.entity.Product;
 import com.example.backend.service.OrderService;
-import com.example.backend.service.ProductService;
 import com.example.backend.service.UserService;
+import com.example.backend.service.ProductService;
+import com.example.backend.service.PaymentService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,102 +28,116 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
-    private final UserService userService;
+    private final OrderService   orderService;
+    private final UserService    userService;
     private final ProductService productService;
+    private final PaymentService paymentService;
 
-     @PostMapping("/create-after-checkout")
-    public ResponseEntity<OrderDto> createOrderAfterCheckout(@RequestBody OrderRequest request) {
-        User user = userService.findByEmail(request.getUserEmail())
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + request.getUserEmail()));
-
-        // Sipariş nesnesi oluştur
+    // 1) Checkout sonrası sipariş oluşturma
+    @PostMapping("/create-after-checkout")
+    public ResponseEntity<OrderDto> createAfterCheckout(@RequestBody OrderRequest req) {
+        // a) Buyer
+        User buyer = userService.findById(req.getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("User not found: " + req.getUserId()));
+        // b) Payment
+        Payment payment = paymentService.findById(req.getPaymentId())
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found: " + req.getPaymentId()));
+        // c) Order inşa
         Order order = Order.builder()
             .orderDate(LocalDate.now())
-            .status("PENDING_APPROVAL") // Enum yerine string olarak yönetiliyor
-            .totalAmount(request.getTotalPrice())
-            .user(user)
+            .status("PENDING_APPROVAL")
+            .totalAmount(req.getItems().stream()
+                .map(i -> i.getOrderedProductPrice()
+                           .multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add))
+            .user(buyer)
+            .payment(payment)
             .build();
-
-        // Ürünleri OrderItem olarak eşleştir
-        List<OrderItem> items = request.getProductNames().stream().map(name -> {
-            Product p = productService.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + name));
+        // d) Kalemleri map et
+        List<OrderItem> items = req.getItems().stream().map(i -> {
+            Product p = productService.findById(i.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + i.getProductId()));
             return OrderItem.builder()
-                .product(p)
-                .orderedProductPrice(p.getPrice())
-                .quantity(1)
-                .itemStatus("PENDING")
                 .order(order)
+                .product(p)
+                .quantity(i.getQuantity())
+                .orderedProductPrice(i.getOrderedProductPrice())
+                .itemStatus("PENDING")
                 .build();
         }).collect(Collectors.toList());
-
         order.setItems(items);
-
+        // e) Seller ataması (ilk kalemin seller’ı)
+        if (!items.isEmpty()) {
+            order.setSeller(items.get(0).getProduct().getSeller());
+        }
+        // f) Kaydet ve DTO’ya dönüştür
         Order saved = orderService.save(order);
-        return ResponseEntity.status(201).body(toDto(saved));
+        return ResponseEntity.status(201).body(mapToDto(saved));
     }
 
+    // 2) Tüm siparişleri listele
     @GetMapping
-    public List<OrderDto> listAll() {
-        return orderService.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<OrderDto>> listAll() {
+        List<OrderDto> dtos = orderService.findAll().stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
+    // 3) ID ile sipariş getir
     @GetMapping("/{id}")
     public ResponseEntity<OrderDto> getById(@PathVariable Long id) {
         return orderService.findById(id)
-                .map(order -> ResponseEntity.ok(toDto(order)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+            .map(o -> ResponseEntity.ok(mapToDto(o)))
+            .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public OrderDto create(@RequestBody Order order) {
-        // Back-reference’i set et
-        if (order.getItems() != null) {
-            order.getItems().forEach(item -> item.setOrder(order));
-        }
-        Order saved = orderService.save(order);
-        return toDto(saved);
+    // 4) Kullanıcı bazlı
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderDto>> listByUser(@PathVariable Long userId) {
+        List<OrderDto> dtos = orderService.findByUserId(userId).stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDto> update(@PathVariable Long id,
-                                           @RequestBody Order order) {
-        return orderService.findById(id)
-                .map(existing -> {
-                    order.setId(id);
-                    if (order.getItems() != null) {
-                        order.getItems().forEach(item -> item.setOrder(order));
-                    }
-                    Order saved = orderService.save(order);
-                    return ResponseEntity.ok(toDto(saved));
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    // 5) Satıcı bazlı (isteğe bağlı status filtresi)
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<List<OrderDto>> listBySeller(
+            @PathVariable Long sellerId,
+            @RequestParam(required = false) String status) {
+        List<Order> orders = (status != null)
+            ? orderService.findBySellerIdAndStatus(sellerId, status)
+            : orderService.findBySellerId(sellerId);
+        List<OrderDto> dtos = orders.stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!orderService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        orderService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    // 6) Satıcı onay/red
+    @PutMapping("/seller/orders/{orderId}/status")
+    public ResponseEntity<OrderDto> updateStatus(
+            @PathVariable Long orderId,
+            @RequestBody Map<String, String> body) {
+        Order order = orderService.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
+        order.setStatus(body.get("status"));
+        Order updated = orderService.save(order);
+        return ResponseEntity.ok(mapToDto(updated));
     }
 
-    private OrderDto toDto(Order order) {
-        List<OrderItemDto> items = order.getItems() == null
-                ? List.of()
-                : order.getItems().stream()
-                    .map(i -> new OrderItemDto(
-                        i.getId(),
-                        i.getOrderedProductPrice(),
-                        i.getQuantity(),
-                        i.getItemStatus(),
-                        i.getProduct().getId()
-                    ))
-                    .collect(Collectors.toList());
+    // --- Yardımcı: Entity → DTO dönüşümü
+    private OrderDto mapToDto(Order order) {
+        List<OrderItemDto> items = order.getItems().stream()
+            .map(i -> new OrderItemDto(
+                i.getId(),
+                i.getOrderedProductPrice(),
+                i.getQuantity(),
+                i.getItemStatus(),
+                i.getProduct().getId()
+            ))
+            .collect(Collectors.toList());
 
         return new OrderDto(
             order.getId(),
@@ -128,10 +145,9 @@ public class OrderController {
             order.getStatus(),
             order.getTotalAmount(),
             order.getUser().getId(),
-            items,
-            order.getItems().stream()
-                .map(i -> i.getProduct().getName())
-                .collect(Collectors.toList())
+            order.getSeller() != null ? order.getSeller().getId() : null,
+            order.getPayment().getId(),
+            items
         );
     }
 }

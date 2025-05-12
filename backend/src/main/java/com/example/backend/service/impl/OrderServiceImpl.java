@@ -13,7 +13,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
     private final OrderRepository repo;
 
     @Override
@@ -34,5 +33,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteById(Long id) {
         repo.deleteById(id);
+    }
+
+    @Override
+    public List<Order> findByUserId(Long userId) {
+        return repo.findByUserId(userId);
+    }
+
+    @Override
+    public List<Order> findBySellerId(Long sellerId) {
+        return repo.findBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Order> findBySellerIdAndStatus(Long sellerId, String status) {
+        return repo.findBySellerIdAndStatus(sellerId, status);
     }
 }

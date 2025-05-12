@@ -1,12 +1,15 @@
-// src/main/java/com/example/backend/dto/OrderItemDto.java
 package com.example.backend.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import java.math.BigDecimal;
 
-public record OrderItemDto(
-    Long id,
-    BigDecimal orderedProductPrice,
-    Integer quantity,
-    String itemStatus,
-    Long productId
-) {}
+@Data
+@AllArgsConstructor
+public class OrderItemDto {
+    private Long id;
+    private BigDecimal orderedProductPrice;
+    private Integer quantity;
+    private String itemStatus;
+    private Long productId;
+}
